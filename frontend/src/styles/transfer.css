@@ -1,0 +1,86 @@
+
+.transfer-container{
+
+    width:500px;
+
+    margin:60px auto;
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:10px;
+
+    box-shadow:0 0 20px rgba(0,0,0,.2);
+
+}
+
+.transfer-container h2{
+
+    text-align:center;
+
+    color:#fd7e14;
+
+}
+
+.transfer-container input{
+
+    width:100%;
+
+    padding:12px;
+
+    margin:15px 0;
+
+    border:1px solid #ccc;
+
+    border-radius:5px;
+
+    box-sizing:border-box;
+
+}
+
+.transfer-container button{
+
+    width:100%;
+
+    padding:12px;
+
+    background:#fd7e14;
+
+    color:white;
+
+    border:none;
+
+    border-radius:5px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+}
+
+.transfer-container button:hover{
+
+    background:#e66a00;
+
+}
+
+.message{
+
+    text-align:center;
+
+    color:green;
+
+    margin-top:15px;
+
+}
+
+.error{
+
+    text-align:center;
+
+    color:red;
+
+    margin-top:15px;
+
+}

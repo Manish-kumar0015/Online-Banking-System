@@ -1,0 +1,86 @@
+
+.deposit-container{
+
+    width:450px;
+
+    margin:60px auto;
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:10px;
+
+    box-shadow:0 0 20px rgba(0,0,0,.2);
+
+}
+
+.deposit-container h2{
+
+    text-align:center;
+
+    color:#28a745;
+
+}
+
+.deposit-container input{
+
+    width:100%;
+
+    padding:12px;
+
+    margin:20px 0;
+
+    border:1px solid #ccc;
+
+    border-radius:5px;
+
+    box-sizing:border-box;
+
+}
+
+.deposit-container button{
+
+    width:100%;
+
+    padding:12px;
+
+    background:#28a745;
+
+    color:white;
+
+    border:none;
+
+    border-radius:5px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+}
+
+.deposit-container button:hover{
+
+    background:#218838;
+
+}
+
+.message{
+
+    text-align:center;
+
+    color:green;
+
+    margin-top:15px;
+
+}
+
+.error{
+
+    text-align:center;
+
+    color:red;
+
+    margin-top:15px;
+
+}

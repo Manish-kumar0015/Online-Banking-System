@@ -1,0 +1,29 @@
+.info-card-box{
+
+    background:white;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+
+}
+
+.info-card-box h3{
+
+    color:#2563eb;
+
+    margin-bottom:10px;
+
+}
+
+.info-card-box p{
+
+    font-size:18px;
+
+    font-weight:bold;
+
+}
