@@ -120,6 +120,28 @@ function Login(){
 
                     </button>
 
+                    <p
+                        style={{
+
+                            marginTop:"15px",
+
+                            textAlign:"center"
+
+                        }}
+                    >
+
+                        <Link
+
+                            to="/forgot-password"
+
+                        >
+
+                            Forgot Password?
+
+                        </Link>
+
+                    </p>
+
                 </form>
 
                 {

@@ -1,15 +1,28 @@
-
 import "../styles/summaryCard.css";
 
-function SummaryCard({ title, value }) {
+function SummaryCard({
+
+    title,
+
+    amount
+
+}) {
 
     return (
 
         <div className="summary-card">
 
-            <h4>{title}</h4>
+            <h3>
 
-            <h2>{value}</h2>
+                {title}
+
+            </h3>
+
+            <h2>
+
+                ₹ {amount}
+
+            </h2>
 
         </div>
 

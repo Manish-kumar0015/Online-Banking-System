@@ -1,0 +1,56 @@
+
+.recent-box{
+
+    margin-top:30px;
+
+    background:white;
+
+    border-radius:12px;
+
+    padding:25px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+}
+
+.recent-box h2{
+
+    color:#2563eb;
+
+    margin-bottom:20px;
+
+}
+
+.recent-box table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.recent-box th{
+
+    background:#2563eb;
+
+    color:white;
+
+    padding:14px;
+
+}
+
+.recent-box td{
+
+    padding:14px;
+
+    border-bottom:1px solid #ddd;
+
+    text-align:center;
+
+}
+
+.recent-box tr:hover{
+
+    background:#f3f6ff;
+
+}

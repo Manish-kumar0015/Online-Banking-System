@@ -1,0 +1,55 @@
+.chart-wrapper{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr;
+
+    gap:25px;
+
+    margin-top:35px;
+
+}
+
+.chart-card{
+
+    background:white;
+
+    border-radius:15px;
+
+    padding:25px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+}
+
+.chart-card h2{
+
+    text-align:center;
+
+    color:#1e3a8a;
+
+    margin-bottom:20px;
+
+}
+
+.chart-box{
+
+    height:350px;
+
+}
+
+@media(max-width:992px){
+
+.chart-wrapper{
+
+    grid-template-columns:1fr;
+
+}
+
+.chart-box{
+
+    height:300px;
+
+}
+
+}

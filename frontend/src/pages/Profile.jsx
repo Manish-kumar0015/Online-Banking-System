@@ -2,6 +2,8 @@ import { useEffect, useState, useContext } from "react";
 
 import Navbar from "../components/Navbar";
 
+
+
 import api from "../api/axios";
 
 import { AuthContext } from "../context/AuthContext";
@@ -15,6 +17,12 @@ function Profile() {
     const [user, setUser] = useState(null);
 
     const [name, setName] = useState("");
+
+    const [email, setEmail] = useState("");
+
+    const [address, setAddress] = useState("");
+
+    const [profileImage,setProfileImage] = useState("");
 
     useEffect(() => {
 
@@ -46,6 +54,12 @@ function Profile() {
 
             setName(response.data.name);
 
+            setEmail(response.data.email);
+
+            setAddress(response.data.address || "");
+
+            setProfileImage(response.data.profile_image);
+
         }
 
         catch (error) {
@@ -60,13 +74,23 @@ function Profile() {
 
         try {
 
+            console.log({
+                name,
+                email,
+                address
+            });
+
             const response = await api.put(
 
                 "/auth/profile",
 
                 {
 
-                    name
+                    name,
+
+                    email,
+
+                    address
 
                 },
 
@@ -114,6 +138,22 @@ function Profile() {
 
                 <div className="profile-card">
 
+
+
+                    <label>Profile Image URL</label>
+                    
+                    <input
+
+                    type="text"
+
+                    placeholder="Paste image URL"
+
+                    value={profileImage}
+
+                    onChange={(e)=>setProfileImage(e.target.value)}
+
+                    />
+
                     <label>Name</label>
 
                     <input
@@ -132,9 +172,9 @@ function Profile() {
 
                         type="email"
 
-                        value={user.email}
+                        value={email}
 
-                        disabled
+                        onChange={(e)=>setEmail(e.target.value)}
 
                     />
 
@@ -162,13 +202,69 @@ function Profile() {
 
                     />
 
+                    <label>Account Type</label>
+
+                    <input
+
+                        type="text"
+
+                        value={user.account_type}
+
+                        disabled
+
+                    />
+
+                    <label>IFSC Code</label>
+
+                    <input
+
+                        type="text"
+
+                        value={user.ifsc_code}
+
+                        disabled
+
+                    />
+
+                    <label>Branch</label>
+
+                    <input
+
+                        type="text"
+
+                        value={user.branch}
+
+                        disabled
+
+                    />
+
+                    <label>Account Created</label>
+
+                    <input
+
+                        type="text"
+
+                        value={new Date(user.created_on).toLocaleDateString()}
+
+                        disabled
+
+                    />
+
+                    <label>Address</label>
+
+                    <input
+                        type="text"
+                        value={address}
+                        onChange={(e)=>setAddress(e.target.value)}
+                    />
+
                     <button
 
                         onClick={updateProfile}
 
                     >
 
-                        Save Changes
+                        Edit Profile
 
                     </button>
 

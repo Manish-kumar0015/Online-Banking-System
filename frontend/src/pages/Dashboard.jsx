@@ -1,8 +1,11 @@
 import { useEffect, useState, useContext } from "react";
 
 import Navbar from "../components/Navbar";
-
 import InfoCard from "../components/InfoCard";
+import SummaryCard from "../components/SummaryCard";
+import RecentTransactions from "../components/RecentTransactions";
+
+import TransactionChart from "../components/TransactionChart";
 
 import api from "../api/axios";
 
@@ -16,9 +19,17 @@ function Dashboard() {
 
     const [user, setUser] = useState(null);
 
+    const [summary, setSummary] = useState(null);
+
+    const [transactions, setTransactions] = useState([]);
+
     useEffect(() => {
 
         fetchDashboard();
+
+        fetchSummary();
+
+        fetchTransactions();
 
     }, []);
 
@@ -54,61 +65,237 @@ function Dashboard() {
 
     };
 
-    if (!user) {
+    const fetchSummary = async () => {
+
+        try {
+
+            const response = await api.get(
+
+                "/account/summary",
+
+                {
+
+                    headers: {
+
+                        Authorization: `Bearer ${token}`
+
+                    }
+
+                }
+
+            );
+
+            setSummary(response.data);
+
+        }
+
+        catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
+
+    const fetchTransactions = async () => {
+
+        try {
+
+            const response = await api.get(
+
+                "/account/transactions",
+
+                {
+
+                    headers: {
+
+                        Authorization: `Bearer ${token}`
+
+                    }
+
+                }
+
+            );
+
+            setTransactions(
+
+                response.data.slice(0, 5)
+
+            );
+
+        }
+
+        catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
+    const downloadStatement = async () => {
+
+        try {
+
+            const response = await api.get(
+
+                "/account/statement",
+
+                {
+
+                    responseType: "blob",
+
+                    headers: {
+
+                        Authorization: `Bearer ${token}`
+
+                    }
+
+                }
+
+            );
+
+            const file = new Blob(
+
+                [response.data],
+
+                {
+
+                    type: "application/pdf"
+
+                }
+
+            );
+
+            const fileURL = window.URL.createObjectURL(file);
+
+            const link = document.createElement("a");
+
+            link.href = fileURL;
+
+            link.download = "Bank_Statement.pdf";
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            link.remove();
+
+            window.URL.revokeObjectURL(fileURL);
+
+        }
+
+        catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
+    if (
+
+        !user ||
+
+        !summary
+
+    ) {
 
         return <h2>Loading...</h2>;
 
     }
 
+    
     return (
 
         <>
 
-            <Navbar />
+            <Navbar 
+                user={user}
+                setUser={setUser}
+
+            />
 
             <div className="dashboard">
 
-                <h1>
+                <div className="dashboard-header">
 
-                    ONLINE BANKING SYSTEM
+                    <h1>
 
-                </h1>
+                        Welcome, {user.name} 👋
 
-                <div className="info-card">
+                    </h1>
 
-                    <h2>
+                    <p>
 
-                        Welcome {user.name} 👋
+                        Manage your banking account easily.
 
-                    </h2>
+                    </p>
 
-                    <div className="cards">
+                </div>
 
-                        <InfoCard
+                <div className="summary-grid">
 
-                            title="Email"
+                    <SummaryCard
 
-                            value={user.email}
+                        title="Current Balance"
 
-                        />
+                        amount={summary.balance}
 
-                        <InfoCard
+                    />
 
-                            title="Account Number"
+                    <SummaryCard
 
-                            value={user.account_number}
+                        title="Total Deposit"
 
-                        />
+                        amount={summary.totalDeposit}
 
-                        <InfoCard
+                    />
 
-                            title="Current Balance"
+                    <SummaryCard
 
-                            value={`₹ ${user.balance}`}
+                        title="Total Withdraw"
 
-                        />
+                        amount={summary.totalWithdraw}
 
-                    </div>
+                    />
+
+                    <SummaryCard
+
+                        title="Total Transfer"
+
+                        amount={summary.totalTransfer}
+
+                    />
+
+                </div>
+
+                <TransactionChart
+
+                    summary={summary}
+
+                />
+
+                <RecentTransactions
+
+                    transactions={transactions}
+
+                />
+
+                <div className="statement-download">
+
+                    <button
+
+                        className="statement-btn"
+
+                        onClick={downloadStatement}
+
+                    >
+
+                        📄 Download Bank Statement
+
+                    </button>
 
                 </div>
 

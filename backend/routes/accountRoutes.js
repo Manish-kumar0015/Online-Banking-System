@@ -34,4 +34,37 @@ router.get(
     accountController.getTransactions
 );
 
+// transaction search
+router.get(
+
+    "/transactions/search",
+
+    authenticateToken,
+
+    accountController.searchTransactions
+
+);
+
+// statement download
+router.get(
+
+    "/statement",
+
+    authenticateToken,
+
+    accountController.downloadStatement
+
+);
+
+router.get(
+
+    "/summary",
+
+    authenticateToken,
+
+    accountController.summary
+
+);
+
+
 module.exports = router;

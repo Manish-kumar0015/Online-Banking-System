@@ -62,3 +62,27 @@
     background:darkred;
 
 }
+
+.statement-nav-btn{
+
+    background:none;
+
+    border:none;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    padding:10px 15px;
+
+    transition:.3s;
+
+}
+
+.statement-nav-btn:hover{
+
+    color:#ffd54f;
+
+}

@@ -1,6 +1,11 @@
 
 const Account = require("../models/accountModel");
 
+const PDFDocument = require("pdfkit");
+
+const sendEmail = require("../utils/sendEmail");
+const User = require("../models/userModel");
+
 const deposit = (req, res) => {
 
     const userId = req.user.id;
@@ -101,19 +106,94 @@ const deposit = (req, res) => {
 
                                     }
 
-                                    res.json({
+                                    User.getUserById(
 
-                                        message: "Deposit Successful",
+                                        userId,
 
-                                        accountNumber:
-                                            balanceResult[0].account_number,
+                                        async (userErr, userResult) => {
 
-                                        currentBalance:
-                                            balanceResult[0].balance,
+                                            if (!userErr && userResult.length > 0) {
 
-                                        depositAmount: amount
+                                                const user = userResult[0];
 
-                                    });
+                                                const message = `
+
+                                    Hello ${user.name},
+
+                                    Your deposit was successful.
+
+                                    Account Number : ${balanceResult[0].account_number}
+
+                                    Amount Deposited : ₹${amount}
+
+                                    Current Balance : ₹${balanceResult[0].balance}
+
+                                    Date : ${new Date().toLocaleString()}
+
+                                    Thank you for banking with us.
+
+                                    `;
+
+                                                try {
+
+                                                    await sendEmail(
+
+                                                        user.email,
+
+                                                        "Deposit Successful",
+
+                                                        message
+
+                                                    );
+
+                                                }
+
+                                                catch (emailError) {
+
+                                                    console.log(
+
+                                                        "Email Error:",
+
+                                                        emailError.message
+
+                                                    );
+
+                                                }
+
+                                            }
+
+                                            res.json({
+
+                                                message: "Deposit Successful",
+
+                                                accountNumber:
+
+                                                    balanceResult[0].account_number,
+
+                                                currentBalance:
+
+                                                    balanceResult[0].balance,
+
+                                                depositAmount: amount
+
+                                            });
+
+                                        }
+
+                                    );
+                                    // res.json({
+
+                                    //     message: "Deposit Successful",
+
+                                    //     accountNumber:
+                                    //         balanceResult[0].account_number,
+
+                                    //     currentBalance:
+                                    //         balanceResult[0].balance,
+
+                                    //     depositAmount: amount
+
+                                    // });
 
                                 }
 
@@ -247,17 +327,81 @@ const withdraw = (req, res) => {
 
                                     }
 
-                                    res.json({
+                                    User.getUserById(
 
-                                        message: "Withdraw Successful",
+                                        userId,
 
-                                        accountNumber: result[0].account_number,
+                                        async (userErr, userResult) => {
 
-                                        currentBalance: result[0].balance,
+                                            if (!userErr && userResult.length > 0) {
 
-                                        withdrawAmount: amount
+                                                const user = userResult[0];
 
-                                    });
+                                                const message = `
+
+                                    Hello ${user.name},
+
+                                    Your withdrawal was successful.
+
+                                    Account Number : ${balanceResult[0].account_number}
+
+                                    Amount Withdrawn : ₹${amount}
+
+                                    Current Balance : ₹${balanceResult[0].balance}
+
+                                    Date : ${new Date().toLocaleString()}
+
+                                    Thank you for banking with us.
+
+                                    `;
+
+                                                try {
+
+                                                    await sendEmail(
+
+                                                        user.email,
+
+                                                        "Withdrawal Successful",
+
+                                                        message
+
+                                                    );
+
+                                                }
+
+                                                catch (emailError) {
+
+                                                    console.log(
+
+                                                        "Email Error:",
+
+                                                        emailError.message
+
+                                                    );
+
+                                                }
+
+                                            }
+
+                                            res.json({
+
+                                                message: "Withdraw Successful",
+
+                                                accountNumber:
+
+                                                    balanceResult[0].account_number,
+
+                                                currentBalance:
+
+                                                    balanceResult[0].balance,
+
+                                                withdrawAmount: amount
+
+                                            });
+
+                                        }
+
+                                    );
 
                                 }
 
@@ -421,19 +565,187 @@ const transfer = (req, res) => {
 
                                     }
 
-                                    res.json({
+                                    User.getUserById(
 
-                                        message:"Transfer Successful",
+                                        senderId,
 
-                                        senderAccount,
+                                        async (userErr,userResult)=>{
 
-                                        receiverAccount,
+                                            if(!userErr && userResult.length>0){
 
-                                        transferAmount:amount,
+                                                const user=userResult[0];
 
-                                        currentBalance:balanceResult[0].balance
+                                                const message=`
 
-                                    });
+                            Hello ${user.name},
+
+                            Your money transfer was successful.
+
+                            Receiver Account : ${receiverAccount}
+
+                            Amount Transferred : ₹${amount}
+
+                            Remaining Balance : ₹${balanceResult[0].balance}
+
+                            Date : ${new Date().toLocaleString()}
+
+                            Thank you for banking with us.
+
+                            `;
+
+                                                try{
+
+                                                    await sendEmail(
+
+                                                        user.email,
+
+                                                        "Money Transfer Successful",
+
+                                                        message
+
+                                                    );
+
+                                                }
+
+                                                catch(emailError){
+
+                                                    console.log(
+
+                                                        "Email Error:",
+
+                                                        emailError.message
+
+                                                    );
+
+                                                }
+
+                                            }
+
+                                            Account.getAccountByNumber(
+
+                                                receiverAccount,
+
+                                                async (receiverErr, receiverResult) => {
+
+                                                    if (!receiverErr && receiverResult.length > 0) {
+
+                                                        const receiver = receiverResult[0];
+
+                                                        User.getUserById(
+
+                                                            receiver.user_id,
+
+                                                            async (receiverUserErr, receiverUserResult) => {
+
+                                                                if (!receiverUserErr && receiverUserResult.length > 0) {
+
+                                                                    const receiverUser = receiverUserResult[0];
+
+                                                                    const receiverMessage = `
+
+                                            Hello ${receiverUser.name},
+
+                                            You have received money successfully.
+
+                                            Sender Account : ${senderAccount}
+
+                                            Amount Received : ₹${amount}
+
+                                            Current Balance : ₹${receiver.balance}
+
+                                            Date : ${new Date().toLocaleString()}
+
+                                            Thank you for banking with us.
+
+                                            `;
+
+                                                                    try {
+
+                                                                        await sendEmail(
+
+                                                                            receiverUser.email,
+
+                                                                            "Money Received",
+
+                                                                            receiverMessage
+
+                                                                        );
+
+                                                                    }
+
+                                                                    catch(emailError){
+
+                                                                        console.log(
+
+                                                                            "Receiver Email Error:",
+
+                                                                            emailError.message
+
+                                                                        );
+
+                                                                    }
+
+                                                                }
+
+                                                                res.json({
+
+                                                                    message:"Transfer Successful",
+
+                                                                    senderAccount,
+
+                                                                    receiverAccount,
+
+                                                                    transferAmount:amount,
+
+                                                                    currentBalance:balanceResult[0].balance
+
+                                                                });
+
+                                                            }
+
+                                                        );
+
+                                                    }
+
+                                                    else{
+
+                                                        res.json({
+
+                                                            message:"Transfer Successful",
+
+                                                            senderAccount,
+
+                                                            receiverAccount,
+
+                                                            transferAmount:amount,
+
+                                                            currentBalance:balanceResult[0].balance
+
+                                                        });
+
+                                                    }
+
+                                                }
+
+                                            );
+
+                                            // res.json({
+
+                                            //     message:"Transfer Successful",
+
+                                            //     senderAccount,
+
+                                            //     receiverAccount,
+
+                                            //     transferAmount:amount,
+
+                                            //     currentBalance:balanceResult[0].balance
+
+                                            // });
+
+                                        }
+
+                                    );
 
                                 }
 
@@ -455,9 +767,377 @@ const transfer = (req, res) => {
 
 const getTransactions = (req, res) => {
 
+    const page = parseInt(req.query.page) || 1;
+
+    const limit = parseInt(req.query.limit) || 5;
+
+    const sort = req.query.sort || "latest";
+
     Account.getTransactions(
 
         req.user.id,
+
+        page,
+
+        limit,
+
+        sort,
+
+        (err, result) => {
+
+            if (err) {
+
+                return res.status(500).json({
+
+                    message: "Database Error"
+
+                });
+
+            }
+
+            res.json(result);
+
+        }
+
+    );
+
+};
+
+const downloadStatement = (
+
+    req,
+
+    res
+
+) => {
+
+    Account.getStatementData(
+
+        req.user.id,
+
+        (err, result) => {
+
+            if (err) {
+
+                return res.status(500).json({
+
+                    message: "Database Error"
+
+                });
+
+            }
+
+            if (result.length === 0) {
+
+                return res.status(404).json({
+
+                    message: "No Data Found"
+
+                });
+
+            }
+
+            const doc = new PDFDocument({
+
+                margin: 50
+
+            });
+
+            res.setHeader(
+
+                "Content-Type",
+
+                "application/pdf"
+
+            );
+
+            res.setHeader(
+
+                "Content-Disposition",
+
+                "attachment; filename=statement.pdf"
+
+            );
+
+            doc.pipe(res);
+
+            const user = result[0];
+
+            // ===========================
+            // HEADER
+            // ===========================
+
+            doc
+
+                .fontSize(24)
+
+                .font("Helvetica-Bold")
+
+                .text(
+
+                    "ONLINE BANKING SYSTEM",
+
+                    {
+
+                        align: "center"
+
+                    }
+
+                );
+
+            doc.moveDown(0.5);
+
+            doc
+
+                .moveTo(50, doc.y)
+
+                .lineTo(550, doc.y)
+
+                .stroke();
+
+            doc.moveDown();
+
+            // ===========================
+            // CUSTOMER INFORMATION
+            // ===========================
+
+            doc
+
+                .fontSize(18)
+
+                .font("Helvetica-Bold")
+
+                .text(
+
+                    "Customer Information"
+
+                );
+
+            doc.moveDown(0.5);
+
+            doc
+
+                .fontSize(13)
+
+                .font("Helvetica");
+
+            doc.text(
+
+                `Name            : ${user.name}`
+
+            );
+
+            doc.text(
+
+                `Email           : ${user.email}`
+
+            );
+
+            doc.text(
+
+                `Account Number  : ${user.account_number}`
+
+            );
+
+            doc.text(
+
+                `Current Balance : ₹${user.balance}`
+
+            );
+
+            doc.moveDown();
+
+            doc
+
+                .moveTo(50, doc.y)
+
+                .lineTo(550, doc.y)
+
+                .stroke();
+
+            doc.moveDown();
+
+            // ===========================
+            // TRANSACTION HISTORY
+            // ===========================
+
+            doc
+
+                .fontSize(18)
+
+                .font("Helvetica-Bold")
+
+                .text(
+
+                    "Transaction History"
+
+                );
+
+            doc.moveDown();
+
+            result.forEach((transaction) => {
+
+                if (transaction.type) {
+
+                    doc
+
+                        .fontSize(12)
+
+                        .font("Helvetica");
+
+                    doc.text(
+
+                        `Date : ${new Date(transaction.created_at).toLocaleString()}`
+
+                    );
+
+                    doc.text(
+
+                        `Type : ${transaction.type}`
+
+                    );
+
+                    doc.text(
+
+                        `Amount : ₹${transaction.amount}`
+
+                    );
+
+                    doc.text(
+
+                        `Description : ${transaction.description}`
+
+                    );
+
+                    doc.moveDown();
+
+                    doc
+
+                        .moveTo(50, doc.y)
+
+                        .lineTo(550, doc.y)
+
+                        .stroke();
+
+                    doc.moveDown();
+
+                }
+
+            });
+
+            // ===========================
+            // FOOTER
+            // ===========================
+
+            doc.moveDown();
+
+            doc
+
+                .fontSize(11)
+
+                .font("Helvetica-Oblique")
+
+                .text(
+
+                    `Generated On : ${new Date().toLocaleString()}`
+
+                );
+
+            doc.moveDown();
+
+            doc
+
+                .fontSize(13)
+
+                .font("Helvetica-Bold")
+
+                .text(
+
+                    "Thank You For Banking With Us",
+
+                    {
+
+                        align: "center"
+
+                    }
+
+                );
+
+            doc.end();
+
+        }
+
+    );
+
+};
+
+const summary = (
+
+    req,
+
+    res
+
+) => {
+
+    Account.getSummary(
+
+        req.user.id,
+
+        (err, result) => {
+
+            if (err) {
+
+                return res.status(500).json({
+
+                    message: "Database Error"
+
+                });
+
+            }
+
+            if (result.length === 0) {
+
+                return res.status(404).json({
+
+                    message: "Account Not Found"
+
+                });
+
+            }
+
+            res.json(result[0]);
+
+        }
+
+    );
+
+};
+
+const searchTransactions = (
+
+    req,
+
+    res
+
+) => {
+
+    const keyword = req.query.keyword;
+
+    if (!keyword) {
+
+        return res.status(400).json({
+
+            message: "Search keyword is required"
+
+        });
+
+    }
+
+    Account.searchTransactions(
+
+        req.user.id,
+
+        keyword,
 
         (err, result) => {
 
@@ -487,6 +1167,12 @@ module.exports = {
 
     transfer,
 
-    getTransactions
+    getTransactions,
+
+    downloadStatement,
+
+    summary,
+
+    searchTransactions
 
 };

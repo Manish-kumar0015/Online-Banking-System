@@ -1,29 +1,40 @@
-
 .summary-card{
 
-    background:#2563eb;
+    background:linear-gradient(135deg,#2563eb,#3b82f6);
 
     color:white;
 
-    border-radius:12px;
+    border-radius:15px;
 
     padding:25px;
 
-    text-align:center;
+    box-shadow:0 8px 18px rgba(0,0,0,0.15);
 
-    box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    transition:0.3s;
+
+    text-align:center;
 
 }
 
-.summary-card h4{
+.summary-card:hover{
 
-    margin-bottom:15px;
+    transform:translateY(-6px);
+
+}
+
+.summary-card h3{
+
+    margin:0;
 
     font-size:18px;
+
+    font-weight:500;
 
 }
 
 .summary-card h2{
+
+    margin-top:18px;
 
     font-size:30px;
 

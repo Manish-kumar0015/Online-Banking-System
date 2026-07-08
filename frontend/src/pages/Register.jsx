@@ -16,6 +16,8 @@ function Register(){
 
     const [password,setPassword] = useState("");
 
+    const [accountType, setAccountType] = useState("Savings");
+
     const [message,setMessage] = useState("");
 
     const [error,setError] = useState("");
@@ -40,7 +42,9 @@ function Register(){
 
                     email,
 
-                    password
+                    password,
+
+                    accountType
 
                 }
 
@@ -50,7 +54,7 @@ function Register(){
 
             setTimeout(()=>{
 
-                navigate("/");
+                navigate("/login");
 
             },1500);
 
@@ -125,6 +129,21 @@ function Register(){
                         required
 
                     />
+
+                    <select
+                        value={accountType}
+                        onChange={(e) => setAccountType(e.target.value)}
+                    >
+
+                        <option value="Savings">
+                            Savings
+                        </option>
+
+                        <option value="Current">
+                            Current
+                        </option>
+
+                    </select>
 
                     <button type="submit">
 

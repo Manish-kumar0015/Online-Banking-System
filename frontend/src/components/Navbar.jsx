@@ -2,15 +2,21 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useContext } from "react";
 
+import api from "../api/axios";
+
 import { AuthContext } from "../context/AuthContext";
 
 import "../styles/navbar.css";
 
-function Navbar() {
+import ProfileMenu from "./ProfileMenu";
+
+function Navbar({ user,setUser }) {
 
     const navigate = useNavigate();
 
     const { logout } = useContext(AuthContext);
+
+    const { token } = useContext(AuthContext);
 
     const handleLogout = () => {
 
@@ -19,6 +25,7 @@ function Navbar() {
         navigate("/");
 
     };
+
 
     return (
 
@@ -31,12 +38,6 @@ function Navbar() {
                 <Link to="/dashboard">
 
                     Dashboard
-
-                </Link>
-
-                <Link to="/profile">
-
-                    Profile
 
                 </Link>
 
@@ -60,13 +61,17 @@ function Navbar() {
 
                 <Link to="/transactions">
 
-                    Transactions
+                    Transactions History
 
                 </Link>
 
+                {/* <Link to="/change-password">
+                    Change Password
+                </Link> */}
+
             </div>
 
-            <button
+            {/* <button
 
                 className="logout-btn"
 
@@ -76,7 +81,16 @@ function Navbar() {
 
                 Logout
 
-            </button>
+            </button> */}
+
+            <ProfileMenu
+
+                user={user}
+                setUser={setUser}
+
+                handleLogout={handleLogout}
+
+            />
 
         </nav>
 

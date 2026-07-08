@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Profile from "./pages/Profile";
+import ChangePassword from "./pages/ChangePassword";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
@@ -8,7 +9,10 @@ import Withdraw from "./pages/Withdraw";
 import Transfer from "./pages/Transfer";
 import Transactions from "./pages/Transactions";
 import NotFound from "./pages/NotFound";
-
+import VerifyOTP from "./pages/VerifyOTP";
+import ResetPassword from "./pages/ResetPassword";
+import ForgotPassword from "./pages/ForgotPassword";
+import LandingPage from "./pages/LandingPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -16,8 +20,9 @@ function App() {
     return (
 
         <Routes>
+            <Route path="/" element={<LandingPage />} />
 
-            <Route path="/" element={<Login />} />
+            <Route path="/login" element={<Login />} />
 
             <Route path="/register" element={<Register />} />
 
@@ -66,6 +71,15 @@ function App() {
                 }
             />
 
+            <Route
+                path="/change-password"
+                element={
+                    <ProtectedRoute>
+                        <ChangePassword />
+                    </ProtectedRoute>
+                }
+            />
+
             <Route path="*" element={<NotFound />} />
 
             <Route
@@ -81,6 +95,12 @@ function App() {
 
                 }
             />
+
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+
+            <Route path="/verify-otp" element={<VerifyOTP />} />
+
+            <Route path="/reset-password" element={<ResetPassword />} />
 
         </Routes>
 

@@ -381,21 +381,66 @@ const transferTransaction = (
 
                                 }
 
-                                db.commit((commitErr)=>{
+                                const receiverTransactionSQL = `
+                                    INSERT INTO transactions
+                                    (
+                                        account_number,
+                                        type,
+                                        amount,
+                                        description
+                                    )
+                                    VALUES
+                                    (
+                                        ?,
+                                        'Deposit',
+                                        ?,
+                                        'Money Received'
+                                    )
+                                `;
 
-                                    if(commitErr){
+                                db.query(
 
-                                        return db.rollback(()=>{
+                                    receiverTransactionSQL,
 
-                                            callback(commitErr);
+                                    [
+
+                                        receiverAccount,
+
+                                        amount
+
+                                    ],
+
+                                    (receiverTransactionErr)=>{
+
+                                        if(receiverTransactionErr){
+
+                                            return db.rollback(()=>{
+
+                                                callback(receiverTransactionErr);
+
+                                            });
+
+                                        }
+
+                                        db.commit((commitErr)=>{
+
+                                            if(commitErr){
+
+                                                return db.rollback(()=>{
+
+                                                    callback(commitErr);
+
+                                                });
+
+                                            }
+
+                                            callback(null);
 
                                         });
 
                                     }
 
-                                    callback(null);
-
-                                });
+                                );
 
                             }
 
@@ -413,7 +458,29 @@ const transferTransaction = (
 
 };
 
-const getTransactions = (userId, callback) => {
+const getTransactions = (
+
+    userId,
+
+    page,
+
+    limit,
+
+    sort,
+
+    callback
+
+) => {
+
+    const offset = (page - 1) * limit;
+
+    let order = "DESC";
+
+    if (sort === "oldest") {
+
+        order = "ASC";
+
+    }
 
     const sql = `
         SELECT
@@ -426,13 +493,299 @@ const getTransactions = (userId, callback) => {
         JOIN accounts
         ON transactions.account_number = accounts.account_number
         WHERE accounts.user_id = ?
+        ORDER BY transactions.created_at ${order}
+        LIMIT ? OFFSET ?
+    `;
+
+    db.query(
+
+        sql,
+
+        [
+
+            userId,
+
+            limit,
+
+            offset
+
+        ],
+
+        callback
+
+    );
+
+};
+
+const getStatementData = (
+
+    userId,
+
+    callback
+
+) => {
+
+    const sql = `
+        SELECT
+
+            users.name,
+
+            users.email,
+
+            accounts.account_number,
+
+            accounts.balance,
+
+            transactions.type,
+
+            transactions.amount,
+
+            transactions.description,
+
+            transactions.created_at
+
+        FROM users
+
+        JOIN accounts
+
+        ON users.id = accounts.user_id
+
+        LEFT JOIN transactions
+
+        ON accounts.account_number = transactions.account_number
+
+        WHERE users.id = ?
+
         ORDER BY transactions.created_at DESC
     `;
 
     db.query(
+
         sql,
-        [userId],
+
+        [
+
+            userId
+
+        ],
+
         callback
+
+    );
+
+};
+
+const getSummary = (
+
+    userId,
+
+    callback
+
+) => {
+
+    const sql = `
+
+        SELECT
+
+            a.balance,
+
+            COALESCE(
+
+                SUM(
+
+                    CASE
+
+                        WHEN t.type='Deposit'
+
+                        THEN t.amount
+
+                        ELSE 0
+
+                    END
+
+                ),
+
+                0
+
+            ) AS totalDeposit,
+
+            COALESCE(
+
+                SUM(
+
+                    CASE
+
+                        WHEN t.type='Withdraw'
+
+                        THEN t.amount
+
+                        ELSE 0
+
+                    END
+
+                ),
+
+                0
+
+            ) AS totalWithdraw,
+
+            COALESCE(
+
+                SUM(
+
+                    CASE
+
+                        WHEN t.type='Transfer'
+
+                        THEN t.amount
+
+                        ELSE 0
+
+                    END
+
+                ),
+
+                0
+
+            ) AS totalTransfer
+
+        FROM accounts a
+
+        LEFT JOIN transactions t
+
+        ON a.account_number = t.account_number
+
+        WHERE a.user_id = ?
+
+        GROUP BY a.balance
+
+    `;
+
+    db.query(
+
+        sql,
+
+        [
+
+            userId
+
+        ],
+
+        callback
+
+    );
+
+};
+
+const getTransactionsByPage = (
+
+    userId,
+
+    limit,
+
+    offset,
+
+    callback
+
+) => {
+
+    const sql = `
+
+        SELECT
+
+            transactions.id,
+
+            transactions.type,
+
+            transactions.amount,
+
+            transactions.description,
+
+            transactions.created_at
+
+        FROM transactions
+
+        JOIN accounts
+
+        ON transactions.account_number = accounts.account_number
+
+        WHERE accounts.user_id = ?
+
+        ORDER BY transactions.created_at DESC
+
+        LIMIT ?
+
+        OFFSET ?
+
+    `;
+
+    db.query(
+
+        sql,
+
+        [
+
+            userId,
+
+            Number(limit),
+
+            Number(offset)
+
+        ],
+
+        callback
+
+    );
+
+};
+
+const searchTransactions = (
+
+    userId,
+
+    keyword,
+
+    callback
+
+) => {
+
+    const sql = `
+        SELECT
+            transactions.id,
+            transactions.type,
+            transactions.amount,
+            transactions.description,
+            transactions.created_at
+        FROM transactions
+        JOIN accounts
+        ON transactions.account_number = accounts.account_number
+        WHERE
+            accounts.user_id = ?
+            AND
+            (
+                transactions.type LIKE ?
+                OR
+                transactions.description LIKE ?
+            )
+        ORDER BY transactions.created_at DESC
+    `;
+
+    db.query(
+
+        sql,
+
+        [
+
+            userId,
+
+            `%${keyword}%`,
+
+            `%${keyword}%`
+
+        ],
+
+        callback
+
     );
 
 };
@@ -461,6 +814,14 @@ module.exports = {
 
     transferTransaction,
 
-    getTransactions
+    getTransactions,
+
+    getStatementData,
+
+    getSummary,
+
+    searchTransactions,
+
+    getTransactionsByPage
 
 };
