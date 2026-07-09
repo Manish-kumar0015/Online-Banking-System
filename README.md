@@ -1,193 +1,646 @@
 # 🏦 Online Banking System
 
-A full-stack Online Banking System developed using **React.js**, **Node.js**, **Express.js**, and **MySQL**. The application provides secure user authentication, account management, and core banking operations through a modern web interface.
+A Full Stack Online Banking System developed using **React.js, Node.js, Express.js, and MySQL** that allows users to securely manage their bank accounts online.
+
+The application provides complete banking functionality including account creation, authentication, deposits, withdrawals, fund transfers, transaction history, profile management, password recovery using OTP, PDF bank statements, email notifications, and transaction analytics.
+
+
+# 📌 Features
+
+## Authentication
+
+- User Registration
+- User Login
+- JWT Authentication
+- Protected Routes
+- Logout
+- Change Password
+- Forgot Password using Email OTP
+- Reset Password
+
+
+
+## Banking Features
+
+- Deposit Money
+- Withdraw Money
+- Transfer Money
+- View Current Balance
+- View Account Information
+- View Transaction History
+- Transaction Search
+- Transaction Filtering
+- Transaction Sorting
+- Pagination
+- Download Bank Statement (PDF)
 
 ---
 
-## 🚀 Features
+## User Profile
 
-- 🔐 User Registration & Login
-- 🔑 JWT Authentication
-- 🛡️ Protected Routes
-- 📊 User Dashboard
-- 💰 Deposit Money
-- 💸 Withdraw Money
-- 🔄 Transfer Money Between Accounts
-- 📜 Transaction History
-- 👤 User Profile
-- ⚡ RESTful API Integration
-- 🗄️ MySQL Database
+- Edit Profile
+- Upload Profile Photo
+- View Profile Photo
+- Change Profile Picture
 
 ---
 
-## 🛠️ Tech Stack
+## Email Services
 
-### Frontend
+Automatic email notifications are sent after
+
+- Registration
+- Deposit
+- Withdrawal
+- Money Transfer
+- Password Reset OTP
+
+using Nodemailer.
+
+---
+
+## Dashboard
+
+Interactive dashboard displaying
+
+- Current Balance
+- Total Deposits
+- Total Withdrawals
+- Total Transfers
+- Recent Transactions
+- Bar Chart
+- Doughnut Chart
+
+---
+
+# 🛠 Technologies Used
+
+## Frontend
+
 - React.js
 - React Router DOM
 - Axios
+- Chart.js
 - CSS
 
-### Backend
+---
+
+## Backend
+
 - Node.js
 - Express.js
-- JWT (JSON Web Token)
-- bcrypt
-- MySQL
 
-### Database
+---
+
+## Database
+
 - MySQL
 
 ---
 
-## 📂 Project Structure
+## Authentication
+
+- JWT (JSON Web Token)
+- bcrypt
+
+---
+
+## Other Libraries
+
+- Multer
+- Nodemailer
+- PDFKit
+- dotenv
+- CORS
+
+---
+
+# 📂 Project Structure
 
 
 Online-Banking-System
 │
 ├── backend
+│   │
 │   ├── config
+│   │      db.js
+│   │      multer.js
+│   │
 │   ├── controllers
+│   │      authController.js
+│   │      accountController.js
+│   │
 │   ├── middleware
+│   │      authMiddleware.js
+│   │
 │   ├── models
+│   │      userModel.js
+│   │      accountModel.js
+│   │      otpModel.js
+│   │
 │   ├── routes
+│   │      authRoutes.js
+│   │      accountRoutes.js
+│   │
+│   ├── utils
+│   │      sendEmail.js
+│   │
+│   ├── uploads
+│   │
 │   ├── server.js
+│   │
 │   └── package.json
 │
 ├── frontend
-│   ├── src
-│   │   ├── api
-│   │   ├── components
-│   │   ├── context
-│   │   ├── pages
-│   │   └── styles
-│   ├── public
-│   └── package.json
-│
-└── README.md
+│   │
+│   ├── api
+│   │      axios.js
+│   │
+│   ├── components
+│   │      Navbar
+│   │      ProfileMenu
+│   │      SummaryCard
+│   │      InfoCard
+│   │      TransactionChart
+│   │      RecentTransactions
+│   │
+│   ├── context
+│   │      AuthContext
+│   │
+│   ├── pages
+│   │      Login
+│   │      Register
+│   │      Dashboard
+│   │      Deposit
+│   │      Withdraw
+│   │      Transfer
+│   │      Transactions
+│   │      Profile
+│   │      ChangePassword
+│   │      ForgotPassword
+│   │      VerifyOTP
+│   │      ResetPassword
+│   │
+│   └── App.jsx
 
 
-## ⚙️ Installation
+---
 
-### 1. Clone the Repository
-
-bash
-git clone https://github.com/Manish-kumar0015/Online-Banking-System.git
+# 🔐 Authentication Flow
 
 
-Go to the project folder:
+User Login
 
-bash
-cd Online-Banking-System
+      │
+
+      ▼
+
+Backend verifies credentials
+
+      │
+
+      ▼
+
+JWT Token Generated
+
+      │
+
+      ▼
+
+Token stored in LocalStorage
+
+      │
+
+      ▼
+
+Protected Routes use JWT
+
+      │
+
+      ▼
+
+Backend Middleware verifies token
+
+      │
+
+      ▼
+
+Authorized User
 
 
-## Backend Setup
+---
 
-Go to backend folder:
+# 💰 Banking Workflow
+
+## Deposit
+
+
+User enters amount
+
+↓
+
+Frontend sends request
+
+↓
+
+Backend validates amount
+
+↓
+
+Database updates balance
+
+↓
+
+Transaction recorded
+
+↓
+
+Email notification sent
+
+↓
+
+Updated balance returned
+
+
+---
+
+## Withdraw
+
+
+Enter Amount
+
+↓
+
+Balance Check
+
+↓
+
+Enough Balance?
+
+↓
+
+Yes
+
+↓
+
+Deduct Balance
+
+↓
+
+Save Transaction
+
+↓
+
+Send Email
+
+↓
+
+Success
+
+
+---
+
+## Transfer
+
+
+Sender enters
+
+Receiver Account Number
+
+↓
+
+Validate Receiver
+
+↓
+
+Validate Balance
+
+↓
+
+Database Transaction Begins
+
+↓
+
+Deduct Sender Balance
+
+↓
+
+Credit Receiver Balance
+
+↓
+
+Store Transaction
+
+↓
+
+Commit Transaction
+
+↓
+
+Email Notification
+
+↓
+
+Success
+
+
+---
+
+# 📊 Dashboard
+
+Dashboard displays
+
+- User Information
+- Current Balance
+- Total Deposit
+- Total Withdraw
+- Total Transfer
+- Recent Transactions
+- Transaction Charts
+
+---
+
+# 📄 Bank Statement
+
+Users can download their complete transaction history as a PDF statement.
+
+The PDF contains
+
+- Account Details
+- Transaction History
+- Date
+- Amount
+- Transaction Type
+- Description
+
+---
+
+# 📧 Email Notification
+
+The system sends automatic emails after
+
+- Deposit
+- Withdraw
+- Transfer
+- OTP Generation
+
+using
+
+
+Nodemailer
+
+
+---
+
+# 🔑 Password Recovery
+
+
+Forgot Password
+
+↓
+
+Enter Email
+
+↓
+
+Generate OTP
+
+↓
+
+Store OTP in Database
+
+↓
+
+Send OTP by Email
+
+↓
+
+Verify OTP
+
+↓
+
+Reset Password
+
+↓
+
+Delete OTP
+
+
+---
+
+# 📈 Charts
+
+Dashboard includes
+
+### Bar Chart
+
+Shows
+
+- Deposit
+- Withdraw
+- Transfer
+
+comparison.
+
+### Doughnut Chart
+
+Shows percentage distribution of
+
+- Deposits
+- Withdrawals
+- Transfers
+
+---
+
+# 🗄 Database Tables
+
+## users
+
+Stores
+
+- Name
+- Email
+- Password
+- Address
+- Profile Image
+
+---
+
+## accounts
+
+Stores
+
+- Account Number
+- User ID
+- Balance
+- Account Type
+- Branch
+- IFSC
+
+---
+
+## transactions
+
+Stores
+
+- Sender
+- Receiver
+- Amount
+- Transaction Type
+- Description
+- Date
+
+---
+
+## password_otps
+
+Stores
+
+- Email
+- OTP
+- Expiry Time
+
+---
+
+# 🚀 Installation
+
+## Backend
 
 bash
 cd backend
 
-
-Install dependencies:
-
-bash
 npm install
 
-
-Create a `.env` file inside the backend folder.
-
-Example:
-
-env
-PORT=5000
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your_password
-DB_NAME=online_banking
-JWT_SECRET=your_secret_key
+npm start
 
 
-Start the backend server:
+---
 
-bash
-npm run dev
-
-
-
-## Frontend Setup
-
-Open another terminal.
-
-Go to frontend folder:
+## Frontend
 
 bash
 cd frontend
 
-Install dependencies:
-
-bash
 npm install
 
-
-Start the frontend:
-
-bash
 npm run dev
 
 
-Frontend will run at:
+---
+
+# Environment Variables
+
+Create
 
 
-http://localhost:5173
+.env
 
 
-Backend will run at:
+inside backend
 
+env
+PORT=5000
 
-http://localhost:5000
+DB_HOST=localhost
 
+DB_USER=root
 
+DB_PASSWORD=your_password
 
+DB_NAME=online_banking
 
-## 📸 Application Modules
+JWT_SECRET=your_secret_key
 
-- User Authentication
-- Dashboard
-- Deposit
-- Withdraw
-- Fund Transfer
-- Transaction History
-- User Profile
+EMAIL_USER=your_email@gmail.com
+
+EMAIL_PASS=your_app_password
+
 
 ---
 
-## Future Enhancements
+# API Endpoints
 
-- Edit Profile
-- Change Password
-- Transaction Search & Filter
-- Download Transaction History as PDF
-- Charts & Analytics Dashboard
-- Responsive Mobile Design
-- Online Deployment
+## Authentication
+
+
+POST /api/auth/register
+
+POST /api/auth/login
+
+GET /api/auth/dashboard
+
+PUT /api/auth/profile
+
+PUT /api/auth/change-password
+
+POST /api/auth/forgot-password
+
+POST /api/auth/verify-otp
+
+POST /api/auth/reset-password
+
+POST /api/auth/upload-photo
+
 
 ---
 
-## 👨‍💻 Developer
+## Banking
+
+
+POST /api/account/deposit
+
+POST /api/account/withdraw
+
+POST /api/account/transfer
+
+GET /api/account/transactions
+
+GET /api/account/transactions/search
+
+GET /api/account/statement
+
+GET /api/account/summary
+
+
+---
+
+# Security Features
+
+- JWT Authentication
+- Password Hashing using bcrypt
+- Protected API Routes
+- Email OTP Verification
+- Input Validation
+- SQL Parameterized Queries
+- Secure File Upload using Multer
+
+---
+
+# Future Improvements
+
+- Admin Dashboard
+- Mobile Banking Application
+- Razorpay Payment Gateway
+- Two Factor Authentication
+- SMS OTP
+- AI Based Fraud Detection
+- Loan Management
+- Fixed Deposit Module
+- Internet Banking Beneficiary Management
+- UPI Integration
+
+---
+
+# Author
 
 **Manish Kumar**
 
-B.Tech, Computer Science and Engineering
+B.Tech Computer Science & Engineering
 
 National Institute of Technology Silchar
 
-GitHub: https://github.com/Manish-kumar0015
+GitHub:
+https://github.com/Manish-kumar0015
 
-LinkedIn: *(Add your LinkedIn profile here)*
-
----
-
-## 📄 License
-
-This project is developed for educational and learning purposes.
+LinkedIn:
+(Add your LinkedIn URL)
