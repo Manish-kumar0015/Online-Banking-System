@@ -1,6 +1,6 @@
-
 const db = require("../config/db");
 
+// Save generated OTP in the database with its expiry time
 const saveOTP = (
 
     email,
@@ -48,6 +48,7 @@ const saveOTP = (
 
 };
 
+// Fetch the latest OTP for verification during password reset
 const verifyOTP = (
 
     email,
@@ -85,6 +86,7 @@ const verifyOTP = (
 
 };
 
+// Remove all OTP records after successful password reset
 const deleteOTP = (
 
     email,

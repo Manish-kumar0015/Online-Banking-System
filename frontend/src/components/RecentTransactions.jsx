@@ -1,6 +1,6 @@
-
 import "../styles/recentTransactions.css";
 
+// Displays the user's most recent banking transactions
 function RecentTransactions({ transactions }) {
 
     return (
@@ -31,6 +31,7 @@ function RecentTransactions({ transactions }) {
 
                     {
 
+                        // Show a message when no transactions are available
                         transactions.length === 0 ?
 
                         (
@@ -51,6 +52,7 @@ function RecentTransactions({ transactions }) {
 
                         (
 
+                            // Render each transaction as a table row
                             transactions.map((transaction) => (
 
                                 <tr key={transaction.id}>
@@ -63,6 +65,7 @@ function RecentTransactions({ transactions }) {
 
                                     <td>
 
+                                        {/* Format transaction date into a readable format */}
                                         {
 
                                             new Date(

@@ -6,14 +6,14 @@ import bankingImage from "../assets/banking.png";
 
 function LandingPage() {
 
+    // Hook used for programmatic page navigation
     const navigate = useNavigate();
 
     return (
 
         <div className="landing-page">
 
-            {/* Navbar */}
-
+            {/* Top navigation bar */}
             <nav className="navbar">
 
                 <div className="logo">
@@ -24,6 +24,7 @@ function LandingPage() {
 
                 <div className="nav-links">
 
+                    {/* Navigation links to different sections of the landing page */}
                     <a href="#home">Home</a>
 
                     <a href="#features">Features</a>
@@ -32,12 +33,14 @@ function LandingPage() {
 
                     <a href="#contact">Contact</a>
 
+                    {/* Navigate to Login page */}
                     <button
                         onClick={()=>navigate("/login")}
                     >
                         Login
                     </button>
 
+                    {/* Navigate to Registration page */}
                     <button
                         onClick={()=>navigate("/register")}
                     >
@@ -48,8 +51,7 @@ function LandingPage() {
 
             </nav>
 
-            {/* Hero */}
-
+            {/* Hero section introducing the banking system */}
             <section
                 id="home"
                 className="hero"
@@ -79,6 +81,7 @@ function LandingPage() {
 
                     </p>
 
+                    {/* Redirect user to login page */}
                     <button
 
                         className="get-btn"
@@ -95,6 +98,7 @@ function LandingPage() {
 
                 <div className="hero-right">
 
+                    {/* Banking illustration */}
                     <img
 
                         src={bankingImage}
@@ -107,8 +111,7 @@ function LandingPage() {
 
             </section>
 
-                        {/* Why Choose Us */}
-
+            {/* Section highlighting major advantages of the banking system */}
             <section className="why-us">
 
                 <h2>
@@ -193,8 +196,7 @@ function LandingPage() {
             </section>
 
 
-            {/* Statistics */}
-
+            {/* Banking statistics section */}
             <section className="stats">
 
                 <div className="stat-card">
@@ -262,8 +264,8 @@ function LandingPage() {
                 </div>
 
             </section>
-            {/* Features */}
 
+            {/* Features provided by the Online Banking System */}
             <section
                 id="features"
                 className="features"
@@ -329,8 +331,7 @@ function LandingPage() {
 
             </section>
 
-            {/* About */}
-
+            {/* Brief information about the project */}
             <section
                 id="about"
                 className="about"
@@ -352,8 +353,7 @@ function LandingPage() {
 
             </section>
 
-            {/* Contact */}
-
+            {/* Contact section */}
             <section
                 id="contact"
                 className="contact"
@@ -374,8 +374,7 @@ function LandingPage() {
 
             </section>
 
-            {/* Footer */}
-
+            {/* Website footer */}
             <footer>
 
                 © 2026 Online Banking System

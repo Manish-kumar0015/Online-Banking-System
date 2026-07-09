@@ -4,11 +4,9 @@ import Navbar from "../components/Navbar";
 import InfoCard from "../components/InfoCard";
 import SummaryCard from "../components/SummaryCard";
 import RecentTransactions from "../components/RecentTransactions";
-
 import TransactionChart from "../components/TransactionChart";
 
 import api from "../api/axios";
-
 import { AuthContext } from "../context/AuthContext";
 
 import "../styles/dashboard.css";
@@ -17,12 +15,16 @@ function Dashboard() {
 
     const { token } = useContext(AuthContext);
 
+    // Stores logged-in user's profile information
     const [user, setUser] = useState(null);
 
+    // Stores account summary (balance, deposits, withdrawals, transfers)
     const [summary, setSummary] = useState(null);
 
+    // Stores recent transaction history
     const [transactions, setTransactions] = useState([]);
 
+    // Fetch dashboard data when component loads
     useEffect(() => {
 
         fetchDashboard();
@@ -33,6 +35,7 @@ function Dashboard() {
 
     }, []);
 
+    // Fetch user profile and account details
     const fetchDashboard = async () => {
 
         try {
@@ -65,6 +68,7 @@ function Dashboard() {
 
     };
 
+    // Fetch transaction summary for charts and summary cards
     const fetchSummary = async () => {
 
         try {
@@ -97,7 +101,7 @@ function Dashboard() {
 
     };
 
-
+    // Fetch latest transactions (display only first five)
     const fetchTransactions = async () => {
 
         try {
@@ -134,6 +138,7 @@ function Dashboard() {
 
     };
 
+    // Download bank statement as a PDF file
     const downloadStatement = async () => {
 
         try {
@@ -156,6 +161,7 @@ function Dashboard() {
 
             );
 
+            // Create downloadable PDF from response
             const file = new Blob(
 
                 [response.data],
@@ -194,6 +200,7 @@ function Dashboard() {
 
     };
 
+    // Show loading screen until dashboard data is available
     if (
 
         !user ||
@@ -206,19 +213,19 @@ function Dashboard() {
 
     }
 
-    
     return (
 
         <>
 
-            <Navbar 
+            {/* Top navigation bar */}
+            <Navbar
                 user={user}
                 setUser={setUser}
-
             />
 
             <div className="dashboard">
 
+                {/* Welcome section */}
                 <div className="dashboard-header">
 
                     <h1>
@@ -235,6 +242,7 @@ function Dashboard() {
 
                 </div>
 
+                {/* Account summary cards */}
                 <div className="summary-grid">
 
                     <SummaryCard
@@ -271,18 +279,21 @@ function Dashboard() {
 
                 </div>
 
+                {/* Transaction statistics charts */}
                 <TransactionChart
 
                     summary={summary}
 
                 />
 
+                {/* Recent transaction table */}
                 <RecentTransactions
 
                     transactions={transactions}
 
                 />
 
+                {/* Bank statement download button */}
                 <div className="statement-download">
 
                     <button

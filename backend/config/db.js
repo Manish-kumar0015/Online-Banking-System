@@ -1,5 +1,11 @@
 const mysql = require("mysql2");
 
+// ==============================
+// Create MySQL Database Connection
+// Reads database credentials from
+// environment variables (.env)
+// ==============================
+
 const db = mysql.createConnection({
 
     host: process.env.DB_HOST,
@@ -14,6 +20,12 @@ const db = mysql.createConnection({
 
 });
 
+// ==============================
+// Connect to MySQL Database
+// Logs success or error message
+// when the server starts
+// ==============================
+
 db.connect((err) => {
 
     if(err){
@@ -21,6 +33,7 @@ db.connect((err) => {
         console.log(err);
 
     }
+
     else{
 
         console.log("Database Connected");
@@ -28,5 +41,9 @@ db.connect((err) => {
     }
 
 });
+
+// Export database connection
+// so it can be used throughout
+// the application
 
 module.exports = db;

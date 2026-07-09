@@ -12,26 +12,32 @@ import "../styles/withdraw.css";
 
 function Withdraw() {
 
+    // Hook for navigating between pages
     const navigate = useNavigate();
 
+    // Get JWT token from authentication context
     const { token } = useContext(AuthContext);
 
+    // State variables for withdrawal amount and response messages
     const [amount, setAmount] = useState("");
 
     const [message, setMessage] = useState("");
 
     const [error, setError] = useState("");
 
+    // Handles the withdrawal request
     const handleWithdraw = async (e) => {
 
         e.preventDefault();
 
+        // Clear previous messages
         setMessage("");
 
         setError("");
 
         try {
 
+            // Send withdrawal request to the backend
             const response = await api.post(
 
                 "/account/withdraw",
@@ -46,6 +52,7 @@ function Withdraw() {
 
                     headers: {
 
+                        // Send JWT token for user authentication
                         Authorization: `Bearer ${token}`
 
                     }
@@ -54,8 +61,10 @@ function Withdraw() {
 
             );
 
+            // Display success message
             setMessage(response.data.message);
 
+            // Redirect user to dashboard after successful withdrawal
             setTimeout(() => {
 
                 navigate("/dashboard");
@@ -66,6 +75,7 @@ function Withdraw() {
 
         catch (err) {
 
+            // Display backend error message if available
             if (err.response) {
 
                 setError(err.response.data.message);
@@ -84,12 +94,14 @@ function Withdraw() {
 
     return (
         <>
+        {/* Navigation Bar */}
         <Navbar />
 
             <div className="withdraw-container">
 
                 <h2>Withdraw Money</h2>
 
+                {/* Withdrawal Form */}
                 <form onSubmit={handleWithdraw}>
 
                     <input
@@ -116,6 +128,7 @@ function Withdraw() {
 
                 </form>
 
+                {/* Success message */}
                 {
 
                     message &&
@@ -128,6 +141,7 @@ function Withdraw() {
 
                 }
 
+                {/* Error message */}
                 {
 
                     error &&

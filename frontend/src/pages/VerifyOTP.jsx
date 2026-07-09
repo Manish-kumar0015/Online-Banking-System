@@ -8,16 +8,22 @@ import "../styles/VerifyOTP.css";
 
 function VerifyOTP() {
 
+    // Store the OTP entered by the user
     const [otp, setOtp] = useState("");
 
+    // Access data passed from the previous page
     const location = useLocation();
 
+    // Hook for page navigation
     const navigate = useNavigate();
 
+    // Retrieve the user's email passed from Forgot Password page
     const email = location.state?.email;
 
+    // Verify the entered OTP with the backend
     const verifyOTP = async () => {
 
+        // Prevent API call if OTP field is empty
         if (!otp) {
 
             alert("Enter OTP");
@@ -28,6 +34,7 @@ function VerifyOTP() {
 
         try {
 
+            // Send email and OTP to backend for verification
             const response = await api.post(
 
                 "/auth/verify-otp",
@@ -42,8 +49,10 @@ function VerifyOTP() {
 
             );
 
+            // Show success message after OTP verification
             alert(response.data.message);
 
+            // Navigate to Reset Password page and pass the email
             navigate(
 
                 "/reset-password",
@@ -64,6 +73,7 @@ function VerifyOTP() {
 
         catch (error) {
 
+            // Display backend error message if OTP is invalid or expired
             alert(
 
                 error.response?.data?.message ||
@@ -88,6 +98,7 @@ function VerifyOTP() {
 
                 </h2>
 
+                {/* Display the email where the OTP was sent */}
                 <p>
 
                     OTP sent to
@@ -98,6 +109,7 @@ function VerifyOTP() {
 
                 </p>
 
+                {/* OTP input field */}
                 <input
 
                     type="text"
@@ -110,6 +122,7 @@ function VerifyOTP() {
 
                 />
 
+                {/* Verify OTP button */}
                 <button
 
                     onClick={verifyOTP}

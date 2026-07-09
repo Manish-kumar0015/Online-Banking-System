@@ -1,17 +1,25 @@
+// Library for hashing and verifying passwords
 const bcrypt = require("bcrypt");
 
+// Library for validating user input
 const validator = require("validator");
 
+// User database operations
 const User = require("../models/userModel");
 
+// OTP database operations
 const OTP = require("../models/otpModel");
 
+// Utility function to send emails
 const sendEmail = require("../utils/sendEmail");
 
+// ======================================
+// Register a New User and Create Account
+// ======================================
 const register = async (req,res)=>{
 
     try{
-
+        // Extract registration details from request body
         const{
 
             name,
@@ -23,7 +31,7 @@ const register = async (req,res)=>{
             accountType
 
         }=req.body;
-
+        // Validate required fields
         if(!name || !email || !password){
 
             return res.status(400).json({
@@ -33,7 +41,7 @@ const register = async (req,res)=>{
             });
 
         }
-
+        // Validate email format
         if(!validator.isEmail(email)){
 
             return res.status(400).json({
@@ -43,9 +51,9 @@ const register = async (req,res)=>{
             });
 
         }
-
+        // Encrypt password before storing in database
         const hashedPassword = await bcrypt.hash(password,10);
-
+        // Create user object for database insertion
         const userData={
 
             name,
@@ -55,7 +63,7 @@ const register = async (req,res)=>{
             password:hashedPassword
 
         };
-
+        // Insert user into database
         User.createUser(
 
             userData,
@@ -74,9 +82,9 @@ const register = async (req,res)=>{
                     });
 
                 }
-
+                // Get newly created user's ID
                 const userId = result.insertId;
-
+                // Create a bank account for the registered user
                 User.createAccount(
 
                     userId,
@@ -96,7 +104,7 @@ const register = async (req,res)=>{
                             });
 
                         }
-
+                        // Return successful registration response
                         res.status(201).json({
 
                             message:"Registration Successful",
@@ -128,11 +136,13 @@ const register = async (req,res)=>{
 };
 
 const jwt = require("jsonwebtoken");
-
+// =====================
+// Authenticate User Login
+// =====================
 const login = (req, res) => {
-
+    // Read login credentials
     const { email, password } = req.body;
-
+    // Validate required fields
     if (!email || !password) {
 
         return res.status(400).json({
@@ -142,7 +152,7 @@ const login = (req, res) => {
         });
 
     }
-
+    // Find user by email
     User.findUserByEmail(email, async (err, result) => {
 
         if (err) {
@@ -164,9 +174,9 @@ const login = (req, res) => {
             });
 
         }
-
+        // Get user details from database
         const user = result[0];
-
+        // Compare entered password with encrypted password
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
@@ -178,7 +188,7 @@ const login = (req, res) => {
             });
 
         }
-
+        // Generate JWT token for authenticated user
         const token = jwt.sign(
 
             {
@@ -198,7 +208,7 @@ const login = (req, res) => {
             }
 
         );
-
+        // Return login success response with JWT token
         res.json({
 
             message: "Login Successful",
@@ -210,9 +220,11 @@ const login = (req, res) => {
     });
 
 };
-
+// ========================
+// Fetch Dashboard Details
+// ========================
 const dashboard = (req, res) => {
-
+    // Fetch logged-in user's account details
     User.getDashboard(
 
         req.user.id,
@@ -246,11 +258,13 @@ const dashboard = (req, res) => {
     );
 
 };
-
+// ======================
+// Change User Password
+// ======================
 const changePassword = async (req, res) => {
 
     try {
-
+        // Read password fields from request
         const {
 
             currentPassword,
@@ -260,7 +274,7 @@ const changePassword = async (req, res) => {
             confirmPassword
 
         } = req.body;
-
+        // Validate required fields
         if (
 
             !currentPassword ||
@@ -278,7 +292,7 @@ const changePassword = async (req, res) => {
             });
 
         }
-
+        // Ensure both new passwords match
         if (newPassword !== confirmPassword) {
 
             return res.status(400).json({
@@ -288,7 +302,7 @@ const changePassword = async (req, res) => {
             });
 
         }
-
+        // Fetch current user details
         User.findUserByEmail(
 
             req.user.email,
@@ -316,7 +330,7 @@ const changePassword = async (req, res) => {
                 }
 
                 const user = result[0];
-
+                // Verify current password
                 const isMatch = await bcrypt.compare(
 
                     currentPassword,
@@ -334,7 +348,7 @@ const changePassword = async (req, res) => {
                     });
 
                 }
-
+                // Encrypt new password
                 const hashedPassword = await bcrypt.hash(
 
                     newPassword,
@@ -342,7 +356,7 @@ const changePassword = async (req, res) => {
                     10
 
                 );
-
+                // Update password in database
                 User.updatePassword(
 
                     req.user.id,
@@ -388,11 +402,13 @@ const changePassword = async (req, res) => {
     }
 
 };
-
+// =====================
+// Update User Profile
+// =====================
 const updateProfile = (req, res) => {
-
+    // Logged-in user's ID
     const userId = req.user.id;
-
+    // Read updated profile information
     const {
 
         name,
@@ -404,7 +420,7 @@ const updateProfile = (req, res) => {
         profile_image
 
     } = req.body;
-
+    // Update profile information in database
     User.updateProfile(
 
         userId,
@@ -440,9 +456,11 @@ const updateProfile = (req, res) => {
     );
 
 };
-
+// ==================================
+// Send OTP for Password Reset
+// ==================================
 const sendOTP = (req, res) => {
-
+    // Read email entered by user
     const { email } = req.body;
 
     if (!email) {
@@ -454,7 +472,7 @@ const sendOTP = (req, res) => {
         });
 
     }
-
+    // Verify email exists in database
     User.findUserByEmail(
 
         email,
@@ -480,19 +498,19 @@ const sendOTP = (req, res) => {
                 });
 
             }
-
+            // Generate a random 6-digit OTP
             const otp = Math.floor(
 
                 100000 + Math.random() * 900000
 
             ).toString();
-
+            // OTP will expire after 5 minutes
             const expiresAt = new Date(
 
                 Date.now() + 5 * 60 * 1000
 
             );
-
+            // Save OTP into database
             OTP.saveOTP(
 
                 email,
@@ -512,7 +530,7 @@ const sendOTP = (req, res) => {
                         });
 
                     }
-
+                    // Prepare OTP email content
                     const message = `
 
 Hello,
@@ -528,7 +546,7 @@ Do not share it with anyone.
 `;
 
                     try {
-
+                        // Prepare OTP email content
                         await sendEmail(
 
                             email,
@@ -562,9 +580,11 @@ Do not share it with anyone.
     );
 
 };
-
+// ====================
+// Verify User OTP
+// ====================
 const verifyOTP = (req, res) => {
-
+    // Read email and OTP
     const {
 
         email,
@@ -582,7 +602,7 @@ const verifyOTP = (req, res) => {
         });
 
     }
-
+    // Check whether OTP exists
     OTP.verifyOTP(
 
         email,
@@ -612,7 +632,7 @@ const verifyOTP = (req, res) => {
             }
 
             const otpData = result[0];
-
+            // Check whether OTP has expired
             const now = new Date();
 
             if (now > otpData.expires_at) {
@@ -624,7 +644,7 @@ const verifyOTP = (req, res) => {
                 });
 
             }
-
+            // OTP verified successfully
             res.json({
 
                 message: "OTP Verified Successfully"
@@ -636,7 +656,9 @@ const verifyOTP = (req, res) => {
     );
 
 };
-
+// ========================
+// Reset User Password
+// ========================
 const resetPassword = async (req, res) => {
 
     const {
@@ -658,7 +680,7 @@ const resetPassword = async (req, res) => {
     }
 
     try {
-
+        // Encrypt new password
         const hashedPassword = await bcrypt.hash(
 
             password,
@@ -666,7 +688,7 @@ const resetPassword = async (req, res) => {
             10
 
         );
-
+        // Update password in database
         User.resetPassword(
 
             email,
@@ -684,13 +706,13 @@ const resetPassword = async (req, res) => {
                     });
 
                 }
-
+                // Remove used OTP after successful password reset
                 OTP.deleteOTP(
 
                     email,
 
                     () => {
-
+                        // Return success response
                         res.json({
 
                             message: "Password Reset Successfully"
@@ -718,9 +740,11 @@ const resetPassword = async (req, res) => {
     }
 
 };
-
+// ===========================
+// Upload User Profile Photo
+// ===========================
 const uploadPhoto = (req, res) => {
-
+    // Ensure an image file is selected
     if (!req.file) {
 
         return res.status(400).json({
@@ -730,9 +754,9 @@ const uploadPhoto = (req, res) => {
         });
 
     }
-
+    // Save relative image path
     const imagePath = "uploads/profile/" + req.file.filename;
-
+    // Save relative image path
     User.updateProfileImage(
 
         req.user.id,

@@ -1,5 +1,6 @@
 import "../styles/summaryCard.css";
 
+// Reusable card component for displaying a banking summary value
 function SummaryCard({
 
     title,

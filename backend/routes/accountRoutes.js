@@ -6,35 +6,35 @@ const authenticateToken = require("../middleware/authMiddleware");
 
 const accountController = require("../controllers/accountController");
 
-// Deposit
+// Deposit money into the authenticated user's account
 router.post(
     "/deposit",
     authenticateToken,
     accountController.deposit
 );
 
-// Withdraw
+// Withdraw money from the authenticated user's account
 router.post(
     "/withdraw",
     authenticateToken,
     accountController.withdraw
 );
 
-// Transfer
+// Transfer money from the authenticated user to another account
 router.post(
     "/transfer",
     authenticateToken,
     accountController.transfer
 );
 
-// Transaction History
+// Retrieve transaction history with pagination and sorting
 router.get(
     "/transactions",
     authenticateToken,
     accountController.getTransactions
 );
 
-// transaction search
+// Search transactions using transaction type or description
 router.get(
 
     "/transactions/search",
@@ -45,7 +45,7 @@ router.get(
 
 );
 
-// statement download
+// Generate and download the user's bank statement in PDF format
 router.get(
 
     "/statement",
@@ -56,6 +56,7 @@ router.get(
 
 );
 
+// Fetch account summary including balance and transaction totals
 router.get(
 
     "/summary",
@@ -65,6 +66,5 @@ router.get(
     accountController.summary
 
 );
-
 
 module.exports = router;

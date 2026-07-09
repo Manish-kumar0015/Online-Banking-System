@@ -12,10 +12,13 @@ import "../styles/transfer.css";
 
 function Transfer() {
 
+    // Hook for navigating to another page
     const navigate = useNavigate();
 
+    // Get JWT token from authentication context
     const { token } = useContext(AuthContext);
 
+    // State variables for transfer form and response messages
     const [receiverAccount, setReceiverAccount] = useState("");
 
     const [amount, setAmount] = useState("");
@@ -24,16 +27,19 @@ function Transfer() {
 
     const [error, setError] = useState("");
 
+    // Handles money transfer request
     const handleTransfer = async (e) => {
 
         e.preventDefault();
 
+        // Clear previous success/error messages
         setMessage("");
 
         setError("");
 
         try{
 
+            // Send transfer request to backend API
             const response = await api.post(
 
                 "/account/transfer",
@@ -50,6 +56,7 @@ function Transfer() {
 
                     headers:{
 
+                        // Send JWT token for authentication
                         Authorization:`Bearer ${token}`
 
                     }
@@ -58,8 +65,10 @@ function Transfer() {
 
             );
 
+            // Display success message
             setMessage(response.data.message);
 
+            // Redirect user to dashboard after successful transfer
             setTimeout(()=>{
 
                 navigate("/dashboard");
@@ -70,6 +79,7 @@ function Transfer() {
 
         catch(err){
 
+            // Display backend error message if available
             if(err.response){
 
                 setError(err.response.data.message);
@@ -88,7 +98,9 @@ function Transfer() {
 
     return(
         <>
-        <navbar />
+        {/* Navigation Bar */}
+        <Navbar />
+
             <div className="transfer-container">
 
                 <h2>
@@ -97,6 +109,7 @@ function Transfer() {
 
                 </h2>
 
+                {/* Money Transfer Form */}
                 <form onSubmit={handleTransfer}>
 
                     <input
@@ -137,6 +150,7 @@ function Transfer() {
 
                 </form>
 
+                {/* Success message */}
                 {
 
                     message &&
@@ -149,6 +163,7 @@ function Transfer() {
 
                 }
 
+                {/* Error message */}
                 {
 
                     error &&

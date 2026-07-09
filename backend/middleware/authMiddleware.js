@@ -1,10 +1,17 @@
-
+// Library used to create and verify JSON Web Tokens (JWT)
 const jwt = require("jsonwebtoken");
 
+// =====================================
+// JWT Authentication Middleware
+// Protects private routes by verifying
+// the user's authentication token
+// =====================================
 const authenticateToken = (req, res, next) => {
 
+    // Read Authorization header from the incoming request
     const authHeader = req.headers["authorization"];
 
+    // Check whether Authorization header is present
     if (!authHeader) {
 
         return res.status(401).json({
@@ -15,8 +22,10 @@ const authenticateToken = (req, res, next) => {
 
     }
 
+    // Extract JWT token from "Bearer <token>"
     const token = authHeader.split(" ")[1];
 
+    // Ensure token exists
     if (!token) {
 
         return res.status(401).json({
@@ -27,6 +36,7 @@ const authenticateToken = (req, res, next) => {
 
     }
 
+    // Verify JWT using the secret key
     jwt.verify(
 
         token,
@@ -35,6 +45,7 @@ const authenticateToken = (req, res, next) => {
 
         (err, user) => {
 
+            // Token is invalid or expired
             if (err) {
 
                 return res.status(403).json({
@@ -45,8 +56,10 @@ const authenticateToken = (req, res, next) => {
 
             }
 
+            // Store authenticated user information for later use
             req.user = user;
 
+            // Pass control to the next middleware or route handler
             next();
 
         }

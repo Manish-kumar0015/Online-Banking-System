@@ -1,15 +1,22 @@
-
+// Import account-related database functions
 const Account = require("../models/accountModel");
 
+// Library used to generate PDF bank statements
 const PDFDocument = require("pdfkit");
 
+// Utility function to send transaction emails
 const sendEmail = require("../utils/sendEmail");
+
+// User model for fetching user information
 const User = require("../models/userModel");
 
+// ==============================
+// Deposit Money into User Account
+// ==============================
 const deposit = (req, res) => {
-
+    // Logged-in user's ID comes from JWT middleware
     const userId = req.user.id;
-
+    // Deposit amount entered by user
     const { amount } = req.body;
 
     // Validate input
@@ -23,7 +30,7 @@ const deposit = (req, res) => {
 
     }
 
-    // Find user's account
+    // Fetch user's account details
     Account.getAccount(
 
         userId,
@@ -49,10 +56,10 @@ const deposit = (req, res) => {
                 });
 
             }
-
+             // Store account number for transaction history
             const accountNumber = accountResult[0].account_number;
 
-            // Update balance
+            // Update account balance after deposit
             Account.depositMoney(
 
                 userId,
@@ -71,7 +78,7 @@ const deposit = (req, res) => {
 
                     }
 
-                    // Save transaction
+                    // Save deposit transaction into transaction history
                     Account.saveTransaction(
 
                         accountNumber,
@@ -89,7 +96,7 @@ const deposit = (req, res) => {
                                 });
 
                             }
-
+                            // Fetch updated balance after successful deposit
                             Account.getBalance(
 
                                 userId,
@@ -105,7 +112,7 @@ const deposit = (req, res) => {
                                         });
 
                                     }
-
+                                    // Fetch user's name and email for sending notification
                                     User.getUserById(
 
                                         userId,
@@ -115,7 +122,7 @@ const deposit = (req, res) => {
                                             if (!userErr && userResult.length > 0) {
 
                                                 const user = userResult[0];
-
+                                                // Email content sent after successful deposit
                                                 const message = `
 
                                     Hello ${user.name},
@@ -135,7 +142,7 @@ const deposit = (req, res) => {
                                     `;
 
                                                 try {
-
+                                                // Send deposit confirmation email
                                                     await sendEmail(
 
                                                         user.email,
@@ -161,7 +168,7 @@ const deposit = (req, res) => {
                                                 }
 
                                             }
-
+                                            // Return success response to frontend
                                             res.json({
 
                                                 message: "Deposit Successful",
@@ -213,13 +220,16 @@ const deposit = (req, res) => {
 
 };
 
+// =================================
+// Withdraw Money from User Account
+// =================================
 const withdraw = (req, res) => {
 
     const userId = req.user.id;
 
     const { amount } = req.body;
 
-    // Validate Amount
+    // Validate withdrawal amount
     if (!amount || amount <= 0) {
 
         return res.status(400).json({
@@ -230,7 +240,7 @@ const withdraw = (req, res) => {
 
     }
 
-    // Get Current Balance
+    // Fetch current account balance
     Account.getCurrentBalance(
 
         userId,
@@ -261,7 +271,7 @@ const withdraw = (req, res) => {
 
             const accountNumber = balanceResult[0].account_number;
 
-            // Check Balance
+            // Check whether sufficient balance is available
             if (currentBalance < amount) {
 
                 return res.status(400).json({
@@ -272,7 +282,7 @@ const withdraw = (req, res) => {
 
             }
 
-            // Withdraw Money
+            // Deduct amount from account balance
             Account.withdrawMoney(
 
                 userId,
@@ -291,7 +301,7 @@ const withdraw = (req, res) => {
 
                     }
 
-                    // Save Transaction
+                    // Record withdrawal transaction
                     Account.saveWithdrawTransaction(
 
                         accountNumber,
@@ -310,7 +320,7 @@ const withdraw = (req, res) => {
 
                             }
 
-                            // Fetch Updated Balance
+                            // Fetch latest balance after withdrawal
                             Account.getBalance(
 
                                 userId,
@@ -326,7 +336,7 @@ const withdraw = (req, res) => {
                                         });
 
                                     }
-
+                                    // Fetch user details to send withdrawal confirmation email
                                     User.getUserById(
 
                                         userId,
@@ -356,7 +366,7 @@ const withdraw = (req, res) => {
                                     `;
 
                                                 try {
-
+                                                    // Send withdrawal confirmation email
                                                     await sendEmail(
 
                                                         user.email,
@@ -421,10 +431,13 @@ const withdraw = (req, res) => {
 
 };
 
+// ====================================
+// Transfer Money Between Two Accounts
+// ====================================
 const transfer = (req, res) => {
-
+    // Logged-in user's ID (Sender)
     const senderId = req.user.id;
-
+    // Receiver account number and transfer amount
     const {
 
         receiverAccount,
@@ -444,7 +457,7 @@ const transfer = (req, res) => {
 
     }
 
-    // Get Sender Balance
+    // Fetch sender's current account balance
     Account.getCurrentBalance(
 
         senderId,
@@ -497,7 +510,7 @@ const transfer = (req, res) => {
 
             }
 
-            // Find Receiver
+            // Verify receiver account exists
             Account.getAccountByNumber(
 
                 receiverAccount,
@@ -524,7 +537,7 @@ const transfer = (req, res) => {
 
                     }
 
-                    // Debit Sender
+                    // Perform transfer (Debit sender and Credit receiver)
                     Account.transferTransaction(
 
                         senderId,
@@ -548,7 +561,7 @@ const transfer = (req, res) => {
                                 });
 
                             }
-
+                            // Fetch updated sender balance after transfer
                             Account.getBalance(
 
                                 senderId,
@@ -564,7 +577,7 @@ const transfer = (req, res) => {
                                         });
 
                                     }
-
+                                    // Fetch sender information to send transfer confirmation email
                                     User.getUserById(
 
                                         senderId,
@@ -594,7 +607,7 @@ const transfer = (req, res) => {
                             `;
 
                                                 try{
-
+                                                    // Send transfer confirmation email to sender
                                                     await sendEmail(
 
                                                         user.email,
@@ -620,7 +633,7 @@ const transfer = (req, res) => {
                                                 }
 
                                             }
-
+                                            // Fetch receiver details to send money received notification
                                             Account.getAccountByNumber(
 
                                                 receiverAccount,
@@ -660,7 +673,7 @@ const transfer = (req, res) => {
                                             `;
 
                                                                     try {
-
+                                                                        // Send money received email to receiver
                                                                         await sendEmail(
 
                                                                             receiverUser.email,
@@ -686,7 +699,7 @@ const transfer = (req, res) => {
                                                                     }
 
                                                                 }
-
+                                                                // Return successful transfer response
                                                                 res.json({
 
                                                                     message:"Transfer Successful",
@@ -729,20 +742,6 @@ const transfer = (req, res) => {
 
                                             );
 
-                                            // res.json({
-
-                                            //     message:"Transfer Successful",
-
-                                            //     senderAccount,
-
-                                            //     receiverAccount,
-
-                                            //     transferAmount:amount,
-
-                                            //     currentBalance:balanceResult[0].balance
-
-                                            // });
-
                                         }
 
                                     );
@@ -765,10 +764,13 @@ const transfer = (req, res) => {
 
 };
 
+// ===================================
+// Get Transaction History
+// Supports Pagination and Sorting
+// ===================================
 const getTransactions = (req, res) => {
-
+    // Read page number, limit and sorting option from query parameters
     const page = parseInt(req.query.page) || 1;
-
     const limit = parseInt(req.query.limit) || 5;
 
     const sort = req.query.sort || "latest";
@@ -802,7 +804,9 @@ const getTransactions = (req, res) => {
     );
 
 };
-
+// ===================================
+// Generate PDF Bank Statement
+// ===================================
 const downloadStatement = (
 
     req,
@@ -810,7 +814,7 @@ const downloadStatement = (
     res
 
 ) => {
-
+    // Fetch account information and transaction history
     Account.getStatementData(
 
         req.user.id,
@@ -836,13 +840,13 @@ const downloadStatement = (
                 });
 
             }
-
+            // Create PDF document
             const doc = new PDFDocument({
 
                 margin: 50
 
             });
-
+            // Configure response headers for PDF download
             res.setHeader(
 
                 "Content-Type",
@@ -1070,7 +1074,9 @@ const downloadStatement = (
     );
 
 };
-
+// ===========================
+// Fetch Dashboard Summary
+// ===========================
 const summary = (
 
     req,
@@ -1078,7 +1084,7 @@ const summary = (
     res
 
 ) => {
-
+    // Fetch account balance and transaction summary
     Account.getSummary(
 
         req.user.id,
@@ -1112,7 +1118,9 @@ const summary = (
     );
 
 };
-
+// ===========================
+// Search Transactions
+// ===========================
 const searchTransactions = (
 
     req,
@@ -1132,7 +1140,7 @@ const searchTransactions = (
         });
 
     }
-
+    // Search transactions by keyword (type, description, etc.)
     Account.searchTransactions(
 
         req.user.id,

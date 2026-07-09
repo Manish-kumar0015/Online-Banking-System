@@ -8,30 +8,36 @@ import "../styles/register.css";
 
 function Register(){
 
+    // Hook used for navigation after successful registration
     const navigate = useNavigate();
 
+    // State variables to store user input and response messages
     const [name,setName] = useState("");
 
     const [email,setEmail] = useState("");
 
     const [password,setPassword] = useState("");
 
+    // Default account type is Savings
     const [accountType, setAccountType] = useState("Savings");
 
     const [message,setMessage] = useState("");
 
     const [error,setError] = useState("");
 
+    // Handles registration form submission
     const handleSubmit = async(e)=>{
 
         e.preventDefault();
 
+        // Clear previous success/error messages
         setMessage("");
 
         setError("");
 
         try{
 
+            // Send registration details to backend API
             const response = await api.post(
 
                 "/auth/register",
@@ -52,6 +58,7 @@ function Register(){
 
             setMessage(response.data.message);
 
+            // Redirect user to login page after successful registration
             setTimeout(()=>{
 
                 navigate("/login");
@@ -62,6 +69,7 @@ function Register(){
 
         catch(err){
 
+            // Display backend error message if available
             if(err.response){
 
                 setError(err.response.data.message);
@@ -86,6 +94,7 @@ function Register(){
 
                 <h2>Create Account</h2>
 
+                {/* Registration Form */}
                 <form onSubmit={handleSubmit}>
 
                     <input
@@ -130,6 +139,7 @@ function Register(){
 
                     />
 
+                    {/* Select account type during registration */}
                     <select
                         value={accountType}
                         onChange={(e) => setAccountType(e.target.value)}
@@ -153,6 +163,7 @@ function Register(){
 
                 </form>
 
+                {/* Success message after registration */}
                 {
 
                     message &&
@@ -165,6 +176,7 @@ function Register(){
 
                 }
 
+                {/* Error message if registration fails */}
                 {
 
                     error &&

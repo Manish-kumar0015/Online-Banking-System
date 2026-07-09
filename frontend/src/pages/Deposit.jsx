@@ -22,16 +22,19 @@ function Deposit() {
 
     const [error, setError] = useState("");
 
+    // Handle deposit request
     const handleDeposit = async (e) => {
 
         e.preventDefault();
 
+        // Clear previous messages
         setMessage("");
 
         setError("");
 
         try {
 
+            // Send deposit request to the backend API
             const response = await api.post(
 
                 "/account/deposit",
@@ -56,6 +59,7 @@ function Deposit() {
 
             setMessage(response.data.message);
 
+            // Redirect user to dashboard after successful deposit
             setTimeout(() => {
 
                 navigate("/dashboard");
@@ -66,6 +70,7 @@ function Deposit() {
 
         catch (err) {
 
+            // Display API error message or fallback server error
             if (err.response) {
 
                 setError(err.response.data.message);
@@ -90,6 +95,7 @@ function Deposit() {
 
                 <h2>Deposit Money</h2>
 
+                {/* Deposit form */}
                 <form onSubmit={handleDeposit}>
 
                     <input
@@ -116,6 +122,7 @@ function Deposit() {
 
                 </form>
 
+                {/* Success message */}
                 {
 
                     message &&
@@ -128,6 +135,7 @@ function Deposit() {
 
                 }
 
+                {/* Error message */}
                 {
 
                     error &&

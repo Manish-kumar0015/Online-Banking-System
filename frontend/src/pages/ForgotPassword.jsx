@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
@@ -9,10 +8,12 @@ import "../styles/ForgotPassword.css";
 
 function ForgotPassword() {
 
+    // Store the email entered by the user
     const [email, setEmail] = useState("");
 
     const navigate = useNavigate();
 
+    // Send OTP to the registered email for password reset
     const sendOTP = async () => {
 
         if (!email) {
@@ -39,6 +40,7 @@ function ForgotPassword() {
 
             alert(response.data.message);
 
+            // Navigate to OTP verification page and pass the email
             navigate(
 
                 "/verify-otp",

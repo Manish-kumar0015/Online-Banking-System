@@ -20,12 +20,15 @@ function App() {
     return (
 
         <Routes>
+
+            {/* Public Routes */}
             <Route path="/" element={<LandingPage />} />
 
             <Route path="/login" element={<Login />} />
 
             <Route path="/register" element={<Register />} />
 
+            {/* Protected Dashboard Route */}
             <Route
                 path="/dashboard"
                 element={
@@ -35,6 +38,7 @@ function App() {
                 }
             />
 
+            {/* Protected Deposit Route */}
             <Route
                 path="/deposit"
                 element={
@@ -44,6 +48,7 @@ function App() {
                 }
             />
 
+            {/* Protected Withdraw Route */}
             <Route
                 path="/withdraw"
                 element={
@@ -53,6 +58,7 @@ function App() {
                 }
             />
 
+            {/* Protected Money Transfer Route */}
             <Route
                 path="/transfer"
                 element={
@@ -62,6 +68,7 @@ function App() {
                 }
             />
 
+            {/* Protected Transaction History Route */}
             <Route
                 path="/transactions"
                 element={
@@ -71,6 +78,7 @@ function App() {
                 }
             />
 
+            {/* Protected Change Password Route */}
             <Route
                 path="/change-password"
                 element={
@@ -80,8 +88,10 @@ function App() {
                 }
             />
 
+            {/* Display Not Found page for invalid URLs */}
             <Route path="*" element={<NotFound />} />
 
+            {/* Protected User Profile Route */}
             <Route
                 path="/profile"
 
@@ -96,6 +106,7 @@ function App() {
                 }
             />
 
+            {/* Password Recovery Routes */}
             <Route path="/forgot-password" element={<ForgotPassword />} />
 
             <Route path="/verify-otp" element={<VerifyOTP />} />

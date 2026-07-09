@@ -10,7 +10,7 @@ const authenticateToken = require("../middleware/authMiddleware");
 
 const sendEmail = require("../utils/sendEmail");
 
-// Test Route
+// Test API to verify that authentication routes are working correctly
 router.get("/test", (req, res) => {
 
     res.json({
@@ -21,13 +21,13 @@ router.get("/test", (req, res) => {
 
 });
 
-// Register
+// Register a new user and create a bank account
 router.post("/register", authController.register);
 
-// Login
+// Authenticate user and generate JWT token
 router.post("/login", authController.login);
 
-// Dashboard
+// Fetch dashboard information of the authenticated user
 router.get(
 
     "/dashboard",
@@ -38,7 +38,7 @@ router.get(
 
 );
 
-// Edit Profile
+// Update profile details of the authenticated user
 router.put(
 
     "/profile",
@@ -49,7 +49,7 @@ router.put(
 
 );
 
-// change password
+// Allow authenticated user to change account password
 router.put(
 
     "/change-password",
@@ -60,7 +60,7 @@ router.put(
 
 );
 
-// Protected Profile Route (Optional)
+// Protected route used to verify JWT authentication
 router.get(
 
     "/profile",
@@ -81,6 +81,7 @@ router.get(
 
 );
 
+// Test route to verify Nodemailer email configuration
 router.get("/test-email", async (req, res) => {
 
     try {
@@ -123,6 +124,7 @@ Thank you!`
 
 });
 
+// Send OTP to the registered email for password reset
 router.post(
 
     "/forgot-password",
@@ -131,6 +133,7 @@ router.post(
 
 );
 
+// Verify the OTP entered by the user
 router.post(
 
     "/verify-otp",
@@ -139,6 +142,7 @@ router.post(
 
 );
 
+// Reset user password after successful OTP verification
 router.post(
 
     "/reset-password",
@@ -147,6 +151,7 @@ router.post(
 
 );
 
+// Upload and update profile photo for the authenticated user
 router.post(
 
     "/upload-photo",
@@ -158,4 +163,5 @@ router.post(
     authController.uploadPhoto
 
 );
+
 module.exports = router;

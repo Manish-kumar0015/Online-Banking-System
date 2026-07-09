@@ -10,7 +10,7 @@ import "../styles/navbar.css";
 
 import ProfileMenu from "./ProfileMenu";
 
-function Navbar({ user,setUser }) {
+function Navbar({ user, setUser }) {
 
     const navigate = useNavigate();
 
@@ -18,6 +18,7 @@ function Navbar({ user,setUser }) {
 
     const { token } = useContext(AuthContext);
 
+    // Clear authentication data and redirect the user to the home page
     const handleLogout = () => {
 
         logout();
@@ -33,6 +34,7 @@ function Navbar({ user,setUser }) {
 
             <h2>🏦 Online Banking</h2>
 
+            {/* Main navigation links */}
             <div className="nav-links">
 
                 <Link to="/dashboard">
@@ -65,27 +67,13 @@ function Navbar({ user,setUser }) {
 
                 </Link>
 
-                {/* <Link to="/change-password">
-                    Change Password
-                </Link> */}
-
             </div>
 
-            {/* <button
-
-                className="logout-btn"
-
-                onClick={handleLogout}
-
-            >
-
-                Logout
-
-            </button> */}
-
+            {/* Profile menu containing profile, photo, and logout options */}
             <ProfileMenu
 
                 user={user}
+
                 setUser={setUser}
 
                 handleLogout={handleLogout}

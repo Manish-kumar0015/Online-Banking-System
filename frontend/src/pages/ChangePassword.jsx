@@ -1,4 +1,3 @@
-
 import { useState, useContext } from "react";
 
 import Navbar from "../components/Navbar";
@@ -13,6 +12,7 @@ function ChangePassword() {
 
     const { token } = useContext(AuthContext);
 
+    // State variables for password fields and response message
     const [currentPassword, setCurrentPassword] = useState("");
 
     const [newPassword, setNewPassword] = useState("");
@@ -21,6 +21,7 @@ function ChangePassword() {
 
     const [message, setMessage] = useState("");
 
+    // Send password update request to the backend
     const handleSubmit = async (e) => {
 
         e.preventDefault();
@@ -53,6 +54,7 @@ function ChangePassword() {
 
             );
 
+            // Display success message and clear the form
             setMessage(response.data.message);
 
             setCurrentPassword("");
@@ -65,6 +67,7 @@ function ChangePassword() {
 
         catch (error) {
 
+            // Display backend error or a generic error message
             setMessage(
 
                 error.response?.data?.message ||
@@ -91,6 +94,7 @@ function ChangePassword() {
 
                 </h1>
 
+                {/* Password change form */}
                 <form
 
                     onSubmit={handleSubmit}
@@ -171,6 +175,7 @@ function ChangePassword() {
 
                 </form>
 
+                {/* Display success or error message */}
                 {
 
                     message &&

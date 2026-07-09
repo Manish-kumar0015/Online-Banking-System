@@ -1,5 +1,6 @@
 const db = require("../config/db");
 
+// Create a new user record during registration
 const createUser = (userData, callback) => {
 
     const sql = `
@@ -19,7 +20,8 @@ const createUser = (userData, callback) => {
 
 };
 
-const createAccount = (userId, accountType,callback) => {
+// Create a new bank account with zero initial balance
+const createAccount = (userId, accountType, callback) => {
 
     const sql = `
         INSERT INTO accounts(user_id,balance,account_type)
@@ -38,6 +40,7 @@ const createAccount = (userId, accountType,callback) => {
 
 };
 
+// Retrieve complete dashboard information by joining user and account details
 const getDashboard = (userId, callback) => {
 
     const sql = `
@@ -85,6 +88,7 @@ const getDashboard = (userId, callback) => {
 
 };
 
+// Find a user using their registered email address
 const findUserByEmail = (email, callback) => {
 
     const sql = `
@@ -101,6 +105,7 @@ const findUserByEmail = (email, callback) => {
 
 };
 
+// Fetch basic user profile information using user ID
 const getUserById = (
 
     userId,
@@ -135,6 +140,7 @@ const getUserById = (
 
 };
 
+// Update user profile details such as name, email, address and profile image
 const updateProfile = (
 
     userId,
@@ -193,6 +199,7 @@ const updateProfile = (
 
 };
 
+// Update only the user's profile picture
 const updateProfileImage = (
 
     userId,
@@ -231,6 +238,7 @@ const updateProfileImage = (
 
 };
 
+// Change password for an authenticated user
 const updatePassword = (
 
     userId,
@@ -265,6 +273,7 @@ const updatePassword = (
 
 };
 
+// Reset password after successful OTP verification
 const resetPassword = (
 
     email,
@@ -298,7 +307,6 @@ const resetPassword = (
     );
 
 };
-
 
 module.exports = {
 

@@ -1,20 +1,29 @@
 import { useEffect, useState, useContext } from "react";
+
 import { useNavigate } from "react-router-dom";
+
 import Navbar from "../components/Navbar";
+
 import api from "../api/axios";
+
 import { AuthContext } from "../context/AuthContext";
+
 import "../styles/transactions.css";
 
 function Transactions() {
 
+    // Hook for page navigation
     const navigate = useNavigate();
 
+    // Get JWT token from authentication context
     const { token } = useContext(AuthContext);
 
+    // State variables for transactions, pagination, search and filters
     const [transactions, setTransactions] = useState([]);
 
     const [page, setPage] = useState(1);
 
+    // Number of transactions displayed per page
     const limit = 10;
 
     const [keyword, setKeyword] = useState("");
@@ -23,12 +32,14 @@ function Transactions() {
 
     const [sortOrder, setSortOrder] = useState("latest");
 
+    // Fetch transactions whenever page number or sorting order changes
     useEffect(() => {
 
         fetchTransactions();
 
     }, [page, sortOrder]);
 
+    // Fetch paginated transaction history from the backend
     const fetchTransactions = async () => {
 
         try {
@@ -59,8 +70,10 @@ function Transactions() {
 
     };
 
+    // Search transactions by transaction type or description
     const searchTransactions = async () => {
 
+        // Reload complete transaction history if search box is empty
         if (keyword.trim() === "") {
 
             fetchTransactions();
@@ -99,7 +112,7 @@ function Transactions() {
 
     };
 
-
+    // Filter transactions based on selected transaction type
     const filteredTransactions = transactions.filter((item)=>{
 
         if(typeFilter==="All"){
@@ -126,6 +139,7 @@ function Transactions() {
 
                 </h2>
 
+                {/* Search box and sorting controls */}
                 <div className="search-box">
 
                     <input
@@ -152,12 +166,14 @@ function Transactions() {
 
                     </button>
 
+                    {/* Sort transactions by latest or oldest */}
                     <select
                         value={sortOrder}
                         onChange={(e) => {
 
                             setSortOrder(e.target.value);
 
+                            // Reset to first page whenever sorting changes
                             setPage(1);
 
                         }}
@@ -179,6 +195,7 @@ function Transactions() {
 
                 </div>
 
+                {/* Filter transactions by transaction type */}
                 <select
                     value={typeFilter}
                     onChange={(e)=>setTypeFilter(e.target.value)}
@@ -210,6 +227,7 @@ function Transactions() {
 
                 </select>
 
+                {/* Transaction history table */}
                 <table>
 
                     <thead>
@@ -254,6 +272,7 @@ function Transactions() {
 
                             (
 
+                                // Display filtered transactions
                                 filteredTransactions.map((item)=>(
 
                                     <tr key={item.id}>
@@ -290,6 +309,7 @@ function Transactions() {
 
                 </table>
 
+                {/* Pagination controls */}
                 <div className="pagination">
 
                     <button
@@ -324,6 +344,7 @@ function Transactions() {
 
                 </div>
 
+                {/* Navigate back to dashboard */}
                 <button
 
                     className="back-btn"

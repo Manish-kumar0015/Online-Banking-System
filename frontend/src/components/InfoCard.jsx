@@ -1,4 +1,6 @@
 import "../styles/infoCard.css";
+
+// Reusable card component for displaying a title and its corresponding value
 function InfoCard({ title, value }) {
 
     return (

@@ -1,7 +1,9 @@
 
 const db = require("../config/db");
 
-// Update account balance
+// ===============================
+// Deposit Money into User Account
+// ===============================
 const depositMoney = (userId, amount, callback) => {
 
     const sql = `
@@ -18,7 +20,9 @@ const depositMoney = (userId, amount, callback) => {
 
 };
 
-// Save transaction
+// ===================================
+// Save Deposit Transaction to History
+// ===================================
 const saveTransaction = (accountNumber, amount, callback) => {
 
     const sql = `
@@ -46,7 +50,9 @@ const saveTransaction = (accountNumber, amount, callback) => {
 
 };
 
-// Find account number
+// =================================
+// Get Account Number of Logged User
+// =================================
 const getAccount = (userId, callback) => {
 
     const sql = `
@@ -62,7 +68,9 @@ const getAccount = (userId, callback) => {
     );
 
 };
-
+// ======================================
+// Fetch Current Balance and Account Number
+// ======================================
 const getBalance = (userId, callback) => {
 
     const sql = `
@@ -80,7 +88,9 @@ const getBalance = (userId, callback) => {
     );
 
 };
-
+// ========================================
+// Get Current Account Balance Before Transaction
+// ========================================
 const getCurrentBalance = (userId, callback) => {
 
     const sql = `
@@ -98,7 +108,9 @@ const getCurrentBalance = (userId, callback) => {
     );
 
 };
-
+// ===========================
+// Withdraw Money From Account
+// ===========================
 const withdrawMoney = (userId, amount, callback) => {
 
     const sql = `
@@ -114,7 +126,9 @@ const withdrawMoney = (userId, amount, callback) => {
     );
 
 };
-
+// ===================================
+// Save Withdrawal Transaction History
+// ===================================
 const saveWithdrawTransaction = (
 
     accountNumber,
@@ -159,7 +173,9 @@ const saveWithdrawTransaction = (
     );
 
 };
-
+// =======================================
+// Find Receiver Account Using Account Number
+// =======================================
 const getAccountByNumber = (accountNumber, callback) => {
 
     const sql = `
@@ -179,6 +195,9 @@ const getAccountByNumber = (accountNumber, callback) => {
 
 };
 
+// =====================================
+// Credit Money to Receiver's Account
+// =====================================
 const creditReceiver = (
 
     accountNumber,
@@ -212,7 +231,9 @@ const creditReceiver = (
     );
 
 };
-
+// =====================================
+// Save Sender Transfer Transaction
+// =====================================
 const saveTransferTransaction = (
 
     accountNumber,
@@ -257,7 +278,10 @@ const saveTransferTransaction = (
     );
 
 };
-
+// ==================================================
+// Perform Money Transfer Using Database Transaction
+// Ensures all operations succeed or all are rolled back
+// ==================================================
 const transferTransaction = (
 
     senderId,
@@ -271,7 +295,7 @@ const transferTransaction = (
     callback
 
 ) => {
-
+     // Start SQL Transaction
     db.beginTransaction((err)=>{
 
         if(err){
@@ -279,7 +303,7 @@ const transferTransaction = (
             return callback(err);
 
         }
-
+         // Debit sender account
         const withdrawSQL=`
             UPDATE accounts
             SET balance=balance-?
@@ -309,7 +333,7 @@ const transferTransaction = (
                     });
 
                 }
-
+                // Credit receiver account
                 const depositSQL=`
                     UPDATE accounts
                     SET balance=balance+?
@@ -339,7 +363,7 @@ const transferTransaction = (
                             });
 
                         }
-
+                         // Record sender transaction
                         const transactionSQL=`
                             INSERT INTO transactions
                             (
@@ -380,7 +404,7 @@ const transferTransaction = (
                                     });
 
                                 }
-
+                                // Record receiver transaction
                                 const receiverTransactionSQL = `
                                     INSERT INTO transactions
                                     (
@@ -421,7 +445,7 @@ const transferTransaction = (
                                             });
 
                                         }
-
+                                         // Commit transaction if everything succeeds
                                         db.commit((commitErr)=>{
 
                                             if(commitErr){
@@ -458,6 +482,9 @@ const transferTransaction = (
 
 };
 
+// ====================================
+// Get Paginated Transaction History
+// ====================================
 const getTransactions = (
 
     userId,
@@ -471,7 +498,7 @@ const getTransactions = (
     callback
 
 ) => {
-
+     // Calculate starting row for pagination
     const offset = (page - 1) * limit;
 
     let order = "DESC";
@@ -517,6 +544,9 @@ const getTransactions = (
 
 };
 
+// ===================================
+// Fetch Statement Data For PDF Report
+// ===================================
 const getStatementData = (
 
     userId,
@@ -574,7 +604,9 @@ const getStatementData = (
     );
 
 };
-
+// =====================================
+// Calculate Dashboard Summary Statistics
+// =====================================
 const getSummary = (
 
     userId,
@@ -676,7 +708,9 @@ const getSummary = (
     );
 
 };
-
+// ===================================
+// Fetch Transactions Page by Page
+// ===================================
 const getTransactionsByPage = (
 
     userId,
@@ -738,7 +772,9 @@ const getTransactionsByPage = (
     );
 
 };
-
+// ====================================
+// Search Transactions by Type/Description
+// ====================================
 const searchTransactions = (
 
     userId,

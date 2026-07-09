@@ -16,18 +16,25 @@ function ProfileMenu({
 
 }) {
 
+    // Controls profile dropdown visibility
     const [open, setOpen] = useState(false);
+
+    // Controls profile image preview modal
     const [showImage, setShowImage] = useState(false);
+
     const { token } = useContext(AuthContext);
 
+    // Reference to the hidden file input
     const fileInputRef = useRef(null);
 
+    // Open file explorer when "Change Photo" is clicked
     const handleImageClick = () => {
 
         fileInputRef.current.click();
 
     };
 
+    // Upload the selected profile image to the backend
     const handleImageChange = async (e) => {
 
         const file = e.target.files[0];
@@ -60,6 +67,7 @@ function ProfileMenu({
 
             );
 
+            // Update profile image immediately without page refresh
             setUser({
 
                 ...user,
@@ -86,6 +94,7 @@ function ProfileMenu({
 
         <div className="profile-menu">
 
+            {/* Profile avatar that toggles the dropdown menu */}
             <div
 
                 className="profile-avatar"
@@ -124,6 +133,7 @@ function ProfileMenu({
 
             </div>
 
+            {/* Hidden file input used for profile photo selection */}
             <input
 
                 type="file"
@@ -172,6 +182,7 @@ function ProfileMenu({
 
                         <hr />
 
+                        {/* Open profile image preview */}
                         <button
                             className="view-photo-btn"
                             onClick={() => {
@@ -182,6 +193,7 @@ function ProfileMenu({
                             🖼 View Photo
                         </button>
 
+                        {/* Upload a new profile photo */}
                         <button
                             className="change-photo-btn"
                             onClick={handleImageClick}
@@ -191,6 +203,7 @@ function ProfileMenu({
 
                         <hr />
 
+                        {/* Logout from the application */}
                         <button
                             className="logout-btn-profile"
                             onClick={handleLogout}
@@ -203,8 +216,10 @@ function ProfileMenu({
                 )
 
             }
+
             {
 
+            /* Full-screen profile image preview */
             showImage && (
 
                 <div

@@ -28,6 +28,7 @@ import {
 
 import "../styles/chart.css";
 
+// Register Chart.js components required for rendering charts
 ChartJS.register(
 
     CategoryScale,
@@ -48,6 +49,7 @@ ChartJS.register(
 
 function TransactionChart({ summary }) {
 
+    // Extract transaction totals from the dashboard summary
     const values = [
 
         Number(summary.totalDeposit),
@@ -58,6 +60,7 @@ function TransactionChart({ summary }) {
 
     ];
 
+    // Labels corresponding to each transaction type
     const labels = [
 
         "Deposit",
@@ -68,6 +71,7 @@ function TransactionChart({ summary }) {
 
     ];
 
+    // Color scheme used for both bar and doughnut charts
     const colors = [
 
         "#22c55e",
@@ -78,6 +82,7 @@ function TransactionChart({ summary }) {
 
     ];
 
+    // Shared dataset configuration for both charts
     const data = {
 
         labels,
@@ -114,6 +119,7 @@ function TransactionChart({ summary }) {
 
     };
 
+    // Configuration for the bar chart
     const options = {
 
         responsive: true,
@@ -178,6 +184,7 @@ function TransactionChart({ summary }) {
 
     };
 
+    // Configuration for the doughnut chart
     const doughnutOptions = {
 
         responsive: true,
@@ -210,6 +217,7 @@ function TransactionChart({ summary }) {
 
                 <div className="chart-box">
 
+                    {/* Bar chart comparing transaction amounts */}
                     <Bar
 
                         data={data}
@@ -232,6 +240,7 @@ function TransactionChart({ summary }) {
 
                 <div className="chart-box">
 
+                    {/* Doughnut chart showing transaction distribution */}
                     <Doughnut
 
                         data={data}
