@@ -642,5 +642,10 @@ National Institute of Technology Silchar
 GitHub:
 https://github.com/Manish-kumar0015
 
-LinkedIn:
-(Add your LinkedIn URL)
+LinkedIn: *(Add your LinkedIn profile here)*
+
+---
+
+## 📄 License
+
+This project is developed for educational and learning purposes.

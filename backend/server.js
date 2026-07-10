@@ -34,6 +34,7 @@ app.use(
 // Authentication related APIs
 app.use("/api/auth", authRoutes);
 
+
 // Banking account related APIs
 app.use("/api/account", accountRoutes);
 
